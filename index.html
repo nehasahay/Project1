@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Random Event</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <input type="text" class="datepicker">
+        <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+            <i class="material-icons right">send</i>
+        </button>
+    </div>
+    
+    <br>
+
+    <div class="container" id="projectCont">
+        <div class="carousel carousel-slider center">
+            <div class="carousel-fixed-item center">
+                <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Article</a>
+            </div>
+
+            <div class="carousel-item red black-text" href="#one!">
+                <h2>First Panel</h2>
+                <p class="black-text">This is your first panel</p>
+            </div>
+            <div class="carousel-item red black-text" href="#two!">
+                <h2>Second Panel</h2>
+                <p class="black-text">This is your second panel</p>
+            </div>
+            <div class="carousel-item red black-text" href="#three!">
+                <h2>Third Panel</h2>
+                <p class="black-text">This is your third panel</p>
+            </div>
+            <div class="carousel-item red black-text" href="#four!">
+                <h2>Fourth Panel</h2>
+                <p class="black-text">This is your fourth panel</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal1" class="modal bottom-sheet">
+        <div class="modal-content">
+            <h4>Modal Header</h4>
+            <p>A bunch of text</p>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="logic.js"></script>
+</body>
+
+</html>
