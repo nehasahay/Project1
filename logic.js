@@ -1,3 +1,4 @@
+let arrayOfEvents = [];
 $(document).ready(function () {
     $('.datepicker').datepicker();
 });
@@ -50,7 +51,7 @@ function Wikipedia(date = "December_3") {
         let wikipediaArticle = response.parse.text["*"];
 
         let listOfEvents = wikipediaArticle.substring(wikipediaArticle.indexOf("<li>"), wikipediaArticle.indexOf("</ul>"));
-        let arrayOfEvents = [];
+        arrayOfEvents = [];
         let linkIndex = listOfEvents.indexOf("href=\"/");
 
         while (linkIndex !== -1) {
@@ -80,6 +81,9 @@ function Wikipedia(date = "December_3") {
     });
 }
 
+for (let i = 0; i < 5; i++){
+    $("#textdump").html(arrayOfEvents[i]);
+}
 
 function wikiImage(wikipediaPage) {
     $.ajax({
