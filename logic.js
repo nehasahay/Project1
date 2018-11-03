@@ -1,3 +1,7 @@
+$(document).ready(function () {
+    $('.datepicker').datepicker();
+});
+
 var instance = M.Carousel.init({
     fullWidth: true,
     indicators: true
