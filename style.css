@@ -1,6 +1,9 @@
+#modal2{
+    width: 40%;
+}
+
 @import url(https://fonts.googleapis.com/css?family=Roboto);
 
-/****** LOGIN MODAL ******/
 .loginmodal-container {
   padding: 30px;
   max-width: 350px;
