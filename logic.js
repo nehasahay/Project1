@@ -1,4 +1,5 @@
 let arrayOfEvents = [];
+<<<<<<< HEAD
 
 // // let today = whatever today's date is
 
@@ -8,6 +9,8 @@ let arrayOfEvents = [];
 //     let title = title(wikipediaArticle);
 //     // let place = place???(wikipediaArticle);
 // };
+=======
+>>>>>>> 3dfe903256d7b900ea012b3e96319cddae90f538
 $(document).ready(function () {
     $('.datepicker').datepicker();
 });
@@ -85,6 +88,9 @@ function Wikipedia(date = "December_3") {
     });
 }
 
+for (let i = 0; i < 5; i++){
+    $("#textdump").html(arrayOfEvents[i]);
+}
 
 function wikiImage(wikipediaPage) {
     $.ajax({
