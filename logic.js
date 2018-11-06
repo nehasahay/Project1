@@ -1,16 +1,6 @@
 let arrayOfEvents = [];
-<<<<<<< HEAD
-
 // // let today = whatever today's date is
 
-// function wikipedia(date) {
-//     // Get a random event that happened on date
-//     let wikipediaArticle = eventThatHappenedOn(date);
-//     let title = title(wikipediaArticle);
-//     // let place = place???(wikipediaArticle);
-// };
-=======
->>>>>>> 3dfe903256d7b900ea012b3e96319cddae90f538
 $(document).ready(function () {
     $('.datepicker').datepicker();
 });
@@ -46,6 +36,7 @@ $(document).ready(function () {
 });
 
 
+// Gets the events that happened on the date from Wikipedia
 function Wikipedia(date = "December_3") {
     // let queryURL = "https://en.wikipedia.org/w/api.php?format=json&action=parse&page=Wikipedia:Selected_anniversaries/" + date;
     // let queryURL = "https://en.wikipedia.org/w/api.php?format=json&action=parse&text={{Wikipedia:Selected_anniversaries/" + date + "}}&contentmodel=wikitext"
@@ -63,17 +54,20 @@ function Wikipedia(date = "December_3") {
     }).then(function (response) {
         let wikipediaArticle = response.parse.text["*"];
 
+        // Gets the bullet point list from the Selected Anniversaries page
         let listOfEvents = wikipediaArticle.substring(wikipediaArticle.indexOf("<li>"), wikipediaArticle.indexOf("</ul>"));
-        arrayOfEvents = [];
-        let linkIndex = listOfEvents.indexOf("href=\"/");
 
+        // Empties the array for the new date
+        arrayOfEvents = [];
+
+        // Changes all the links on the wiki page to be absolute links instead of relative
+        let linkIndex = listOfEvents.indexOf("href=\"/");
         while (linkIndex !== -1) {
             listOfEvents = listOfEvents.slice(0, linkIndex + "href=\"".length) + "https://en.wikipedia.org" + listOfEvents.slice(linkIndex + "href=\"".length);
             linkIndex = listOfEvents.indexOf("href=\"/");
         }
 
-        // document.write(listOfEvents);
-
+        // Dumps each bullet point into the array until it runs out of bullet points
         while (listOfEvents) {
             let start = listOfEvents.indexOf("<li>") + "<li>".length;
             let end = listOfEvents.indexOf("</li>");
@@ -83,15 +77,15 @@ function Wikipedia(date = "December_3") {
                 "event": event
             });
             listOfEvents = listOfEvents.substring(end + "</li>".length);
-        }
-        console.log(arrayOfEvents);
+        };
+
+        // Gets the images for every item in the array
+        getImagesForEachThing();
     });
-}
+};
 
-for (let i = 0; i < 5; i++){
-    $("#textdump").html(arrayOfEvents[i]);
-}
 
+// Gets the header image from a Wikipedia page
 function wikiImage(wikipediaPage) {
     $.ajax({
         url: "https://en.wikipedia.org/w/api.php",
@@ -99,53 +93,81 @@ function wikiImage(wikipediaPage) {
             action: "parse",
             format: "json",
             page: wikipediaPage,
-            prop: "images",
+            // prop: "images",
             origin: "*"
         },
         method: "GET"
     }).then(function (response) {
+        let wikipediaArticle = response.parse.text["*"];
+        let infoIndex = wikipediaArticle.indexOf("class=\"infobox");
 
+        // Only grabs an image from the infobox section
+        if (infoIndex !== -1) {
+            let imgSrcStart = wikipediaArticle.indexOf("src=\"//", infoIndex);
+            let imgSrcEnd = wikipediaArticle.indexOf("\"", imgSrcStart + "src=\"//".length);
+            let imgSrc = wikipediaArticle.substring(imgSrcStart + "src=\"//".length, imgSrcEnd);
+
+            // Grabs the original image instead of its thumbnail
+            let imgSrcThumb = imgSrc.indexOf("thumb/");
+            let imgSrcThumbnail = imgSrc.lastIndexOf("/");
+            imgSrc = "https://" + imgSrc.slice(0, imgSrcThumb) + imgSrc.slice(imgSrcThumb + "thumb/".length, imgSrcThumbnail);
+            console.log(imgSrc);
+            return imgSrc;
+        };
+        return "";
     });
 };
 
 
-function getImagesForEachThing(array) {
-    array.forEach(event => {
-        let dashIndex = event.indexOf(" – ");
-        let pageIndex = event.indexOf("wiki/", dashIndex);
-        let pageIndexEnd = event.indexOf("\"", pageIndex + "wiki/".length);
-        let imagePage = event.substring(pageIndex + "wiki/".length, pageIndexEnd);
-        console.log(imagePage);
-        // won't work because of asynchronous calls, use .done() or something
-        let image = "https://commons.wikimedia.org/wiki/File:" + wikiImage(imagePage);
-        console.log(image);
+// Gets an image for each event
+function getImagesForEachThing() {
+    arrayOfEvents.forEach(event => {
+        let eventText = event.event;
 
-        wikiImage()
+        // Gets the second link in the event text (i.e. the first link after the year)
+        let dashIndex = eventText.indexOf(" – ");
+        let pageIndexStart = eventText.indexOf("wiki/", dashIndex);
+        let pageIndexEnd = eventText.indexOf("\"", pageIndexStart + "wiki/".length);
+        let page = eventText.substring(pageIndexStart + "wiki/".length, pageIndexEnd);
+        wikiImage(page);
+        // // doesn't work cos asynchronous calls, so can't push them
+        // let image = wikiImage(page).then(function (image) {
+        //     if (image) {
+        //         event = { ...event,
+        //             ...{
+        //                 "image": image
+        //             }
+        //         };
+        //     };
+        // });
     });
 };
-
-
-Wikipedia();
 
 
 // function newYorkTimes(date) {
 //     // Get a news article that happened today
 // };
 
-// $(document).on("click", "#submit-button", function () {
-//     let date = $("#input-box-ID").val().trim();
-//     // wikipedia(date)
-//     // newYorkTimes(date)
-// });
+
+// Gets new events for the inputted date
+$(document).on("click", "#datepicker", function (event) {
+    event.preventDefault();
+    let input = $(".datepicker").val().trim();
+    console.log(input);
+    let month = moment(input).format("MMMM");
+    let day = moment(input).format("D");
+    Wikipedia(month + "_" + day);
+    // user validation: don't let them pick a date from the future, or give them 2017
+    // newYorkTimes(date)
+});
+
 
 // $(document).on("click", ".favorite", function() {
 //     // push the wiki link to an array that goes to firebase
 // });
 
 
-// wikipedia(today);
+// Wikipedia(); // Gets events for December 3rd
+// Gets events for today
+Wikipedia(moment().format("MMMM") + "_" + moment().format("D"));
 // newYorkTimes(today);
-
-// // user validation: don't let them pick a date from the future, or give them 2017
-
-// document.write("stuff you get from parse.text")
