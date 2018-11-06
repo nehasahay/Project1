@@ -13,37 +13,37 @@
 
 <body>
 
-    <div class="user_div">
-        <div id="login_div" class="row">
-            <div class="row z-depth-6 card-panel">
-                <form class="login-form">
-                    <div class="row">
-                    </div>
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <i class="material-icons prefix">mail_outline</i>
-                            <input class="validate" id="email" type="email">
-                            <label for="email" data-error="wrong" data-success="right">Email</label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <i class="material-icons prefix">lock_outline</i>
-                            <input id="password" type="password">
-                            <label for="password">Password</label>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
+
+    <div id="login_div" class="row">
+        <div class="row z-depth-6 card-panel">
+            <form class="login-form">
                 <div class="row">
-                    <div class="input-field col s2">
-                        <a href="#" class="btn waves-effect waves-light col s12">Login</a>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">mail_outline</i>
+                        <input class="validate" id="email" type="email">
+                        <label for="email" data-error="wrong" data-success="right">Email</label>
                     </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">lock_outline</i>
+                        <input id="password" type="password">
+                        <label for="password">Password</label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <div class="row">
+                <div class="input-field col s2">
+                    <a href="#" class="btn waves-effect waves-light col s12">Login</a>
                 </div>
             </div>
         </div>
-
+    </div>
+    <div class="user_div">
         <div class="container">
 
             <!-- <a class="waves-effect waves-light btn modal-trigger" href="#modal2">Login</a>
@@ -131,6 +131,19 @@
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="logic.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.7/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyDOPGqntq8h2iNOJXEpfX1dhVn33fDVcHs",
+            authDomain: "project1-d2b28.firebaseapp.com",
+            databaseURL: "https://project1-d2b28.firebaseio.com",
+            projectId: "project1-d2b28",
+            storageBucket: "",
+            messagingSenderId: "842500057449"
+        };
+        firebase.initializeApp(config);
+    </script>
 </body>
 
 </html>
