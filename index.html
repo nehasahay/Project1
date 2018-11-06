@@ -12,13 +12,19 @@
 </head>
 
 <body>
-    <div class="container">
+    <nav>
+        <div class="nav-wrapper">
+            <a class="brand-logo center">A Day in History</a>
+            <ul class="right hide-on-med-and-down">
+                <li><a class="waves-effect waves-light btn modal-trigger" href="#modal2">Login</a></li>
+            </ul>
+        </div>
+    </nav>
 
-        <a class="waves-effect waves-light btn modal-trigger" href="#modal2">Login</a>
+    <div class="container">
         <div class="user_div">
             <div id="modal2" class="modal">
                 <div class="modal-content">
-
                     <div id="login_div" class="row">
                         <div class="row z-depth-6 card-panel">
                             <form class="login-form">
@@ -50,7 +56,7 @@
                     </div>
                 </div>
             </div>
-
+            <h4>Pick a date to venture into the past!</h4>
             <input type="text" class="datepicker">
             <button class="btn waves-effect waves-light" type="submit" name="action">Submit
                 <i class="material-icons right">send</i>
@@ -103,7 +109,7 @@
         <div id="modal1" class="modal bottom-sheet">
             <div class="modal-content">
                 <h4>Modal Header</h4>
-                <p id= "textdump">A bunch of text</p>
+                <p id="textdump">A bunch of text</p>
             </div>
         </div>
 
