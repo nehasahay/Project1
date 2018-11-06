@@ -1,3 +1,5 @@
+let arrayOfEvents = [];
+
 // // let today = whatever today's date is
 
 // function wikipedia(date) {
@@ -9,6 +11,7 @@
 $(document).ready(function () {
     $('.datepicker').datepicker();
 });
+
 
 var instance = M.Carousel.init({
     fullWidth: true,
@@ -58,7 +61,7 @@ function Wikipedia(date = "December_3") {
         let wikipediaArticle = response.parse.text["*"];
 
         let listOfEvents = wikipediaArticle.substring(wikipediaArticle.indexOf("<li>"), wikipediaArticle.indexOf("</ul>"));
-        let arrayOfEvents = [];
+        arrayOfEvents = [];
         let linkIndex = listOfEvents.indexOf("href=\"/");
 
         while (linkIndex !== -1) {
@@ -73,15 +76,9 @@ function Wikipedia(date = "December_3") {
             let end = listOfEvents.indexOf("</li>");
             let event = listOfEvents.substring(start, end);
 
-            let dashIndex = event.indexOf(" – ");
-            let pageIndex = event.indexOf("wiki/", dashIndex);
-            let pageIndexEnd = event.indexOf("\"", pageIndex + "wiki/".length);
-            let imagePage = event.substring(pageIndex + "wiki/".length, pageIndexEnd);
-            console.log(imagePage);
-            let image = "https://commons.wikimedia.org/wiki/File:" + wikiImage(imagePage);
-            console.log(image);
-
-            arrayOfEvents.push(event);
+            arrayOfEvents.push({
+                "event": event
+            });
             listOfEvents = listOfEvents.substring(end + "</li>".length);
         }
         console.log(arrayOfEvents);
@@ -91,20 +88,36 @@ function Wikipedia(date = "December_3") {
 
 function wikiImage(wikipediaPage) {
     $.ajax({
-         url: "https://en.wikipedia.org/w/api.php",
-         data: {
-             action: "parse",
-             format: "json",
-             page: wikipediaPage,
-             prop: "images",
-             origin: "*"
-         },
+        url: "https://en.wikipedia.org/w/api.php",
+        data: {
+            action: "parse",
+            format: "json",
+            page: wikipediaPage,
+            prop: "images",
+            origin: "*"
+        },
         method: "GET"
     }).then(function (response) {
-        console.log(response);
-        console.log(response.parse.images[0]);
+
     });
-}
+};
+
+
+function getImagesForEachThing(array) {
+    array.forEach(event => {
+        let dashIndex = event.indexOf(" – ");
+        let pageIndex = event.indexOf("wiki/", dashIndex);
+        let pageIndexEnd = event.indexOf("\"", pageIndex + "wiki/".length);
+        let imagePage = event.substring(pageIndex + "wiki/".length, pageIndexEnd);
+        console.log(imagePage);
+        // won't work because of asynchronous calls, use .done() or something
+        let image = "https://commons.wikimedia.org/wiki/File:" + wikiImage(imagePage);
+        console.log(image);
+
+        wikiImage()
+    });
+};
+
 
 Wikipedia();
 
