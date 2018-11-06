@@ -119,3 +119,14 @@
   background: #006cba;
   color: #fff;
 }
+
+@media screen and (max-width: 768px) {
+  .user_div {
+    width: 100%;
+  } 
+
+  .modal-footer{
+    width: 150%;
+  }
+
+}
