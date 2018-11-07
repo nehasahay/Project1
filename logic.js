@@ -1,5 +1,5 @@
 let arrayOfEvents = [];
-// // let today = whatever today's date is
+
 
 $(document).ready(function () {
     $('.datepicker').datepicker();
@@ -86,7 +86,7 @@ function Wikipedia(date = "December_3") {
 
 
 // Gets the header image from a Wikipedia page
-function wikiImage(wikipediaPage) {
+function wikiImage(wikipediaPage, event) {
     $.ajax({
         url: "https://en.wikipedia.org/w/api.php",
         data: {
@@ -111,10 +111,11 @@ function wikiImage(wikipediaPage) {
             let imgSrcThumb = imgSrc.indexOf("thumb/");
             let imgSrcThumbnail = imgSrc.lastIndexOf("/");
             imgSrc = "https://" + imgSrc.slice(0, imgSrcThumb) + imgSrc.slice(imgSrcThumb + "thumb/".length, imgSrcThumbnail);
-            console.log(imgSrc);
-            return imgSrc;
+            event["image"] = imgSrc;
+        } else {
+            // placeholderImageURL goes here
+            event["image"] = "";
         };
-        return "";
     });
 };
 
@@ -129,18 +130,9 @@ function getImagesForEachThing() {
         let pageIndexStart = eventText.indexOf("wiki/", dashIndex);
         let pageIndexEnd = eventText.indexOf("\"", pageIndexStart + "wiki/".length);
         let page = eventText.substring(pageIndexStart + "wiki/".length, pageIndexEnd);
-        wikiImage(page);
-        // // doesn't work cos asynchronous calls, so can't push them
-        // let image = wikiImage(page).then(function (image) {
-        //     if (image) {
-        //         event = { ...event,
-        //             ...{
-        //                 "image": image
-        //             }
-        //         };
-        //     };
-        // });
+        wikiImage(page, event);
     });
+    console.log(arrayOfEvents);
 };
 
 
