@@ -16,16 +16,20 @@
         <div class="nav-wrapper">
             <a class="brand-logo center">A Day in History</a>
             <ul class="right hide-on-med-and-down">
-                <li><a class="waves-effect waves-light btn modal-trigger" href="#modal2">Login</a></li>
+                <div class = "login_div">
+                <li><a class="waves-effect waves-light btn modal-trigger" id="login1" href="#modal2">Login</a></li>
+                <li><a class="waves-effect waves-light btn modal-trigger hide" id="btnlogout">Log out</a></li>
+                </div>
+
+                
             </ul>
         </div>
     </nav>
-
     <div class="container">
-        <div class="user_div">
+        <div class="none-for-now">
             <div id="modal2" class="modal">
                 <div class="modal-content">
-                    <div id="login_div" class="row">
+                    <div class="row">
                         <div class="row z-depth-6 card-panel">
                             <form class="login-form">
                                 <div class="row">
@@ -49,7 +53,8 @@
                         <div class="modal-footer">
                             <div class="row">
                                 <div class="input-field col s2">
-                                    <a href="#" class="btn waves-effect waves-light col s12">Login</a>
+                                    <a href="#" class="btn waves-effect waves-light col s12" id="btnlogin">Login</a>
+                                    <a href="#" class="btn waves-effect waves-light col s12" id="btnsignup">Sign Up</a>
                                 </div>
                             </div>
                         </div>
@@ -74,7 +79,48 @@
                 autem voluptatibus sunt esse.</p>
             <a class="waves-effect waves-light btn">Read More</a>
         </div>
+
+        <br>
+
         <div class="container">
+            <div class="carousel carousel-slider center">
+                <div class="carousel-fixed-item center">
+                    <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Favorite</a>
+                </div>
+
+                <div class="carousel-item red black-text">
+                    <h2>First Panel</h2>
+                    <p class="black-text">This is your first panel</p>
+                </div>
+                <div class="carousel-item blue black-text">
+                    <h2>Second Panel</h2>
+                    <p class="black-text">This is your second panel</p>
+                </div>
+                <div class="carousel-item yellow black-text">
+                    <h2>Third Panel</h2>
+                    <p class="black-text">This is your third panel</p>
+                </div>
+                <div class="carousel-item green black-text">
+                    <h2>Fourth Panel</h2>
+                    <p class="black-text">This is your fourth panel</p>
+                </div>
+                <div class="carousel-item grey black-text">
+                    <h2>Fifth Panel</h2>
+                    <p class="black-text">This is your fifth panel</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal1" class="modal bottom-sheet">
+            <div class="modal-content">
+                <h4>Modal Header</h4>
+                <p id="textdump">A bunch of text</p>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="container user_div">
             <div class="row">
                 <div class="col l6 s12">
                     <h5 class="black-text">Favorites</h5>
@@ -94,6 +140,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <!-- Moment.js -->
     <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.7/firebase.js"></script>
     <script src="logic.js"></script>
 </body>
 
