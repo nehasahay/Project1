@@ -93,7 +93,6 @@ function wikiImage(wikipediaPage, event) {
             action: "parse",
             format: "json",
             page: wikipediaPage,
-            // prop: "images",
             origin: "*"
         },
         method: "GET"
@@ -132,7 +131,8 @@ function getImagesForEachThing() {
         let page = eventText.substring(pageIndexStart + "wiki/".length, pageIndexEnd);
         wikiImage(page, event);
     });
-    console.log(arrayOfEvents);
+    // console.log(arrayOfEvents);
+    displayOnPage();
 };
 
 
@@ -145,10 +145,10 @@ function getImagesForEachThing() {
 $(document).on("click", "#datepicker", function (event) {
     event.preventDefault();
     let input = $(".datepicker").val().trim();
-    console.log(input);
     let month = moment(input).format("MMMM");
     let day = moment(input).format("D");
     Wikipedia(month + "_" + day);
+    console.log(input);
     // user validation: don't let them pick a date from the future, or give them 2017
     // newYorkTimes(date)
 });
@@ -159,6 +159,44 @@ $(document).on("click", "#datepicker", function (event) {
 // });
 
 
+function displayOnPage() {
+    // Making cards
+    console.log(arrayOfEvents);
+    arrayOfEvents.forEach(event => {
+        let card = document.createElement("div");
+        card.className = "card";
+
+        let cardImage = document.createElement("img");
+        cardImage.className = "card-image";
+        cardImage.src = event.image;
+        // let cardImage = $("<img>")
+        // cardImage.addClass = "card-image";
+        // cardImage.attr("src", event.image);
+        cardImage.alt = "";
+        console.log(event);
+
+        let cardContent = document.createElement("div");
+        cardContent.className = "card-content";
+        cardContent.innerHTML = event.event; // wrap up in <p>?
+
+        let cardFavorite = document.createElement("div");
+        cardFavorite.className = "card-action";
+
+        let favoriteButton = document.createElement("a") // <button>
+        favoriteButton.className = "waves-effect waves-light btn";
+        favoriteButton.href = "#";
+        favoriteButton.text = "favorite";
+        cardFavorite.appendChild(favoriteButton);
+
+        // $(card).append(cardImage);
+        card.appendChild(cardImage);
+        card.appendChild(cardContent);
+        card.appendChild(cardFavorite);
+        console.log(card);
+
+        $("#eventdump").append(card);
+    })
+};
 // Wikipedia(); // Gets events for December 3rd
 // Gets events for today
 Wikipedia(moment().format("MMMM") + "_" + moment().format("D"));
