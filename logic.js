@@ -1,5 +1,5 @@
 let arrayOfEvents = [];
-// // let today = whatever today's date is
+
 
 $(document).ready(function () {
     var timesURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
@@ -103,7 +103,7 @@ function Wikipedia(date = "December_3") {
 
 
 // Gets the header image from a Wikipedia page
-function wikiImage(wikipediaPage) {
+function wikiImage(wikipediaPage, event) {
     $.ajax({
         url: "https://en.wikipedia.org/w/api.php",
         data: {
@@ -128,10 +128,11 @@ function wikiImage(wikipediaPage) {
             let imgSrcThumb = imgSrc.indexOf("thumb/");
             let imgSrcThumbnail = imgSrc.lastIndexOf("/");
             imgSrc = "https://" + imgSrc.slice(0, imgSrcThumb) + imgSrc.slice(imgSrcThumb + "thumb/".length, imgSrcThumbnail);
-            console.log(imgSrc);
-            return imgSrc;
+            event["image"] = imgSrc;
+        } else {
+            // placeholderImageURL goes here
+            event["image"] = "";
         };
-        return "";
     });
 };
 
@@ -146,18 +147,9 @@ function getImagesForEachThing() {
         let pageIndexStart = eventText.indexOf("wiki/", dashIndex);
         let pageIndexEnd = eventText.indexOf("\"", pageIndexStart + "wiki/".length);
         let page = eventText.substring(pageIndexStart + "wiki/".length, pageIndexEnd);
-        wikiImage(page);
-        // // doesn't work cos asynchronous calls, so can't push them
-        // let image = wikiImage(page).then(function (image) {
-        //     if (image) {
-        //         event = { ...event,
-        //             ...{
-        //                 "image": image
-        //             }
-        //         };
-        //     };
-        // });
+        wikiImage(page, event);
     });
+    console.log(arrayOfEvents);
 };
 
 
@@ -183,8 +175,66 @@ $(document).on("click", "#datepicker", function (event) {
 //     // push the wiki link to an array that goes to firebase
 // });
 
+Wikipedia();
 
 // Wikipedia(); // Gets events for December 3rd
 // Gets events for today
 Wikipedia(moment().format("MMMM") + "_" + moment().format("D"));
 // newYorkTimes(today);
+//-----------------Firebase Auth----------------
+
+// Initialize Firebase
+var config = {
+    apiKey: "AIzaSyDOPGqntq8h2iNOJXEpfX1dhVn33fDVcHs",
+    authDomain: "project1-d2b28.firebaseapp.com",
+    databaseURL: "https://project1-d2b28.firebaseio.com",
+    projectId: "project1-d2b28",
+    storageBucket: "project1-d2b28.appspot.com",
+    messagingSenderId: "842500057449"
+};
+firebase.initializeApp(config);
+
+const txtEmail = document.getElementById('email');
+const txtPassword = document.getElementById('password');
+const btnLogin = document.getElementById('btnlogin');
+const btnSignup = document.getElementById('btnsignup');
+const btnLogout = document.getElementById('btnlogout');
+const btnLogin1 = document.getElementById('login1');
+const modal2 = document.getElementById('modal2');
+
+btnLogin.addEventListener('click', e => {
+    const email = txtEmail.value;
+    const password = txtPassword.value;
+    const auth = firebase.auth();
+
+    const promise = auth.signInWithEmailAndPassword(email, password);
+    promise.catch(e => console.log(e.message));
+});
+
+btnSignup.addEventListener('click', e => {
+    const email = txtEmail.value;
+    const password = txtPassword.value;
+    const auth = firebase.auth();
+    //TODO: (maybe) check for real email
+    const promise = auth.createUserWithEmailAndPassword(email, password);
+    promise.catch(e => console.log(e.message));
+});  
+
+btnLogout.addEventListener('click', e => {
+    firebase.auth().signOut();
+});
+
+firebase.auth().onAuthStateChanged(firebaseUser => {
+    if (firebaseUser) {
+        console.log(firebaseUser);
+        btnLogout.classList.remove('hide');
+        btnLogin1.classList.add('hide');
+        modal2.classList.add('hide');
+
+    } else {
+        console.log('not logged in');
+        btnLogout.classList.add('hide');
+        btnLogin1.classList.remove('hide');
+        modal2.classList.remove('hide');
+    }
+});
