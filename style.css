@@ -4,6 +4,10 @@
 
 @import url(https://fonts.googleapis.com/css?family=Roboto);
 
+.nav-wrapper{
+  background-color: #004a80 !important;
+ }
+
 .loginmodal-container {
   padding: 30px;
   max-width: 350px;
@@ -118,4 +122,44 @@
 .button:visited {
   background: #006cba;
   color: #fff;
+}
+
+h2 {
+  font-family: "Olde English Text, serif";
+}
+  
+
+@media screen and (max-width: 768px) {
+  .user_div {
+    width: 100%;
+  } 
+
+  .brand-logo {
+    width: 100%;
+    font-size: 2rem;
+  }
+
+  .btn {
+    padding: 0px 5px 0px 5px;
+    height: 20px;
+    line-height: 20px;
+    font-size: 10px;
+  }
+
+  .btn i{
+    font-size: 1.0rem;
+    margin-left: 5px;
+  }
+
+  .modal-footer{
+    width: 150%;
+  }
+
+  .headerSize {
+    font-size: 24px;
+  }
+
+  #paragraphSize{
+    font-size: 12px;
+  }
 }

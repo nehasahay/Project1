@@ -15,10 +15,12 @@
     <nav>
         <div class="nav-wrapper">
             <a class="brand-logo center">A Day in History</a>
-            <ul class="right hide-on-med-and-down">
-                <div class="login_div">
-                    <li><a class="waves-effect waves-light btn modal-trigger" id="login1" href="#modal2">Login</a></li>
-                    <li><a class="waves-effect waves-light btn modal-trigger hide" id="btnlogout">Log out</a></li>
+
+            <ul class="right hide-on-down">
+
+                <div class = "login_div">
+                <li><a class="waves-effect waves-light btn modal-trigger" id="login1" href="#modal2">Login</a></li>
+                <li><a class="waves-effect waves-light btn modal-trigger hide" id="btnlogout">Log out</a></li>
                 </div>
             </ul>
         </div>
@@ -59,8 +61,9 @@
                     </div>
                 </div>
             </div>
-            <h4>Pick a date to venture into the past!</h4>
-            <input type="text" class="datepicker">
+            <h4 class="headerSize">Pick a date to venture into the past!</h4>
+            <input type="text" class="datepicker" placeholder="Click here to select a date!">
+
             <button class="btn waves-effect waves-light" type="submit" name="action" id="datepicker">Submit
                 <i class="material-icons right">send</i>
             </button>
@@ -68,13 +71,10 @@
         <div class="container" id="eventdump">
         </div>
         <div class="container" id="recent-history">
-            <h2>New York Times</h2>
-            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Necessitatibus consectetur ducimus delectus
-                quae
-                expedita facilis fuga voluptatum labore, impedit dolorum placeat et dolore molestias consequuntur
-                accusamus
-                autem voluptatibus sunt esse.</p>
-            <a class="waves-effect waves-light btn">Read More</a>
+            <h2 class="headerSize">New York Times</h2>
+            <h4 id="articleHeader" class="headerSize"></h4>
+            <p id="paragraphSize"></p>
+            <a id="readMore" class="waves-effect waves-light btn">Read More</a>
         </div>
         <div class="container user_div">
             <div class="row">

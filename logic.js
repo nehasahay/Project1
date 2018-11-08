@@ -1,22 +1,28 @@
-$(document).ready(() => {
+$(document).ready(function () {
+    var timesURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
+    var timesParams = { "api-key": "d8a8f76b018a4c2ebe800ed7adaf2607" };
+
+    timesParams.begin_date = moment().format("YYYYMMDD");
+
+    timesURL += '?' + $.param(timesParams);
+
+    $.ajax({
+        url: timesURL,
+        method: "GET"
+    }).done(function (result) {
+        $("#articleHeader").append(result.response.docs[0].headline.main);
+        $("#paragraphSize").append(result.response.docs[0].snippet);
+        $("#readMore").attr("href", result.response.docs[0].web_url)
+    });
+});
+
+
+$(document).ready(function () {
     $('.datepicker').datepicker();
 });
 
 
-//make a function to create array for database or somehting
-//initialize a variable fwith an empty array of object?
-//var myArray = [];
-// for (var i = 0; i < 3; i++) {
-//     var myObj = {};
-//     for (var x = 0; x < 1; x++) {
-//         myObj["URL" + x] = "val" + x;
-//     }
-//     myArray.push(myObj);
-// }
-// console.log(myArray)
-
-
-$(document).ready(() => {
+$(document).ready(function () {
     $('.modal').modal();
 });
 
@@ -95,7 +101,7 @@ function wikiImage(wikipediaPage, event) {
             console.log(imgSrc);
         } else {
             // placeholderImageURL goes here
-            event["image"] = "";
+            event["image"] = "iStock-487145924-1.jpg";
         };
     });
 };
