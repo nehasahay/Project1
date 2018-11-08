@@ -4,6 +4,10 @@
 
 @import url(https://fonts.googleapis.com/css?family=Roboto);
 
+.nav-wrapper{
+  background-color: #004a80 !important;
+ }
+
 .loginmodal-container {
   padding: 30px;
   max-width: 350px;
@@ -120,6 +124,11 @@
   color: #fff;
 }
 
+h2 {
+  font-family: "Olde English Text, serif";
+}
+  
+
 @media screen and (max-width: 768px) {
   .user_div {
     width: 100%;
@@ -153,4 +162,3 @@
   #paragraphSize{
     font-size: 12px;
   }
-}
