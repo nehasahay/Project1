@@ -2,9 +2,27 @@ let arrayOfEvents = [];
 // // let today = whatever today's date is
 
 $(document).ready(function () {
-    $('.datepicker').datepicker();
+    var timesURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
+    var timesParams = { "api-key": "d8a8f76b018a4c2ebe800ed7adaf2607" };
+
+    timesParams.begin_date = moment().format("YYYYMMDD");
+    // timesParams.end_date = moment().format("YYYYMMDD");
+
+    timesURL += '?' + $.param(timesParams);
+
+    $.ajax({
+        url: timesURL,
+        method: "GET"
+    }).done(function (result) {
+        $("#articleHeader").append(result.response.docs[0].headline.main);
+        $("#paragraphSize").append(result.response.docs[0].snippet);
+        $("#readMore").attr("href", result.response.docs[0].web_url)
+    });
 });
 
+$(document).ready(function () {
+    $('.datepicker').datepicker();
+});
 
 var instance = M.Carousel.init({
     fullWidth: true,
@@ -34,7 +52,6 @@ $('.carousel.carousel-slider').carousel({
 $(document).ready(function () {
     $('.modal').modal();
 });
-
 
 // Gets the events that happened on the date from Wikipedia
 function Wikipedia(date = "December_3") {
