@@ -68,7 +68,8 @@ function wikiImage(wikipediaPage, event, array, index) {
         },
         method: "GET"
     }).then(response => {
-        let wikipediaArticle = response.parse.text["*"];
+        console.log(response.parse);
+        let wikipediaArticle = response.parse? response.parse.text["*"] : "";
         let infoIndex = wikipediaArticle.indexOf("class=\"infobox");
 
         // Only grabs an image from the infobox section
@@ -103,6 +104,7 @@ function getImagesForEachThing(array) {
         let pageIndexStart = eventText.indexOf("wiki/", dashIndex) + "wiki/".length;
         let pageIndexEnd = eventText.indexOf("\"", pageIndexStart);
         let page = eventText.substring(pageIndexStart, pageIndexEnd);
+        console.log(page);
         wikiImage(page, event, newArray, index);
     });
     let timer = setInterval(function () {
@@ -132,10 +134,10 @@ function displayOnPage(array, timer) {
         let cardFavorite = document.createElement("div");
         cardFavorite.className = "card-action";
 
-        let favoriteButton = document.createElement("a"); // <button>
+        let favoriteButton = document.createElement("button"); // <button>
         favoriteButton.className = "favorite waves-effect waves-light btn";
-        favoriteButton.href = "#";
-        favoriteButton.text = "favorite";
+        // favoriteButton.href = "#";
+        favoriteButton.textContent = "favorite";
         cardFavorite.appendChild(favoriteButton);
 
         card.appendChild(cardImage);
@@ -213,6 +215,7 @@ $(document).on("click", ".favorite", function () {
         favArray.push(wikiText);
     };
     console.log(favArray);
+    this.className = "btn disabled";
 });
 
 // Wikipedia(); // Gets events for December 3rd
