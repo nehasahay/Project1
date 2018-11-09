@@ -68,7 +68,7 @@ function wikiImage(wikipediaPage, event, array, index) {
         },
         method: "GET"
     }).then(response => {
-        let wikipediaArticle = response.parse.text["*"];
+        let wikipediaArticle = response.parse? response.parse.text["*"] : "";
         let infoIndex = wikipediaArticle.indexOf("class=\"infobox");
 
         // Only grabs an image from the infobox section
@@ -116,33 +116,35 @@ function displayOnPage(array, timer) {
     array.sort(function (a, b) {
         return a.index - b.index;
     });
-    array.forEach(event => {
+    array.forEach(event => {  
+        let container = document.createElement("div");
+        container.className = "col s12 m6";
         let card = document.createElement("div");
-        card.className = "card";
+        card.className = "card large center-align";
 
         let cardImage = document.createElement("img");
-        cardImage.className = "card-image container";
+        cardImage.className = "card-image responsive-img";
         cardImage.src = event.image;
         cardImage.alt = "";
 
         let cardContent = document.createElement("p");
-        cardContent.className = "card-content";
+        cardContent.className = "card-content left-align";
         cardContent.innerHTML = event.event;
 
         let cardFavorite = document.createElement("div");
         cardFavorite.className = "card-action";
 
-        let favoriteButton = document.createElement("a"); // <button>
+        let favoriteButton = document.createElement("button");
         favoriteButton.className = "favorite waves-effect waves-light btn";
-        favoriteButton.href = "#";
-        favoriteButton.text = "favorite";
+        favoriteButton.textContent = "favorite";
         cardFavorite.appendChild(favoriteButton);
 
         card.appendChild(cardImage);
         card.appendChild(cardContent);
         card.appendChild(cardFavorite);
 
-        document.getElementById("eventdump").appendChild(card);
+        container.appendChild(card);
+        document.getElementById("eventdump").appendChild(container);
     });
     clearInterval(timer);
 };
@@ -202,7 +204,6 @@ document.getElementById("datepicker").addEventListener("click", event => {
 $(document).on("click", ".favorite", function () {
     // push the wiki link to an array that goes to firebase
     let wikiText = this.parentElement.previousElementSibling.innerHTML;
-    console.log(wikiText);
 
     let isItAlreadyAFavorite = favArray.filter(event => {
         return wikiText === event;
@@ -212,7 +213,7 @@ $(document).on("click", ".favorite", function () {
         // Stores the gif in an array for favorited gifs
         favArray.push(wikiText);
     };
-    console.log(favArray);
+    this.className = "btn disabled";
 });
 
 // Wikipedia(); // Gets events for December 3rd
