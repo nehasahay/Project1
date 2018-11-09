@@ -127,7 +127,10 @@
 h2 {
   font-family: 'UnifrakturCook', cursive;
 }
-  
+
+h3 {
+ color: #004a80
+}
 
 @media screen and (max-width: 768px) {
   .user_div {
