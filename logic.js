@@ -1,3 +1,5 @@
+let favArray = [];
+
 $(document).ready(function () {
     var timesURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
     var timesParams = {
@@ -69,7 +71,6 @@ function Wikipedia(date = "December_3") {
         };
 
         // Gets the images for every item in the array
-        console.log(array);
         getImagesForEachThing(array);
     });
 };
@@ -101,36 +102,32 @@ function wikiImage(wikipediaPage, event, array, index) {
             let imgSrcThumbnail = imgSrc.lastIndexOf("/");
             imgSrc = "https://" + imgSrc.slice(0, imgSrcThumb) + imgSrc.slice(imgSrcThumb + "thumb/".length, imgSrcThumbnail);
             event["image"] = imgSrc;
-            // console.log(imgSrc);
         } else {
             // placeholderImageURL goes here
             event["image"] = "iStock-487145924-1.jpg";
         };
         event["index"] = index;
         array.push(event);
-        console.log(JSON.stringify(event, null, 2));
     });
 };
 
 
 // Gets an image for each event
 function getImagesForEachThing(array) {
-        let newArray = [];
-        array.forEach((event, index) => {
-            let eventText = event.event;
+    let newArray = [];
+    array.forEach((event, index) => {
+        let eventText = event.event;
 
-            // Gets the second link in the event text (i.e. the first link after the year)
-            let dashIndex = eventText.indexOf(" – ");
-            let pageIndexStart = eventText.indexOf("wiki/", dashIndex) + "wiki/".length;
-            let pageIndexEnd = eventText.indexOf("\"", pageIndexStart);
-            let page = eventText.substring(pageIndexStart, pageIndexEnd);
-            wikiImage(page, event, newArray, index);
-        });
-        let timer = setInterval(function () {
-            if (newArray.length === array.length) displayOnPage(newArray, timer);
-        }, 500);
-        resolve(array);
-        // console.log(array);
+        // Gets the second link in the event text (i.e. the first link after the year)
+        let dashIndex = eventText.indexOf(" – ");
+        let pageIndexStart = eventText.indexOf("wiki/", dashIndex) + "wiki/".length;
+        let pageIndexEnd = eventText.indexOf("\"", pageIndexStart);
+        let page = eventText.substring(pageIndexStart, pageIndexEnd);
+        wikiImage(page, event, newArray, index);
+    });
+    let timer = setInterval(function () {
+        if (newArray.length === array.length) displayOnPage(newArray, timer);
+    }, 500);
 };
 
 
@@ -138,10 +135,9 @@ function getImagesForEachThing(array) {
 function displayOnPage(array, timer) {
     array.sort(function (a, b) {
         return a.index - b.index;
-      });
-    console.log(array);
+    });
+
     array.forEach(event => {
-        console.log(JSON.stringify(event, null, 2));
         let card = document.createElement("div");
         card.className = "card";
 
@@ -158,7 +154,7 @@ function displayOnPage(array, timer) {
         cardFavorite.className = "card-action";
 
         let favoriteButton = document.createElement("a"); // <button>
-        favoriteButton.className = "waves-effect waves-light btn";
+        favoriteButton.className = "favorite waves-effect waves-light btn";
         favoriteButton.href = "#";
         favoriteButton.text = "favorite";
         cardFavorite.appendChild(favoriteButton);
@@ -168,103 +164,114 @@ function displayOnPage(array, timer) {
         card.appendChild(cardFavorite);
 
         document.getElementById("eventdump").appendChild(card);
-        // console.log(card);
     });
     clearInterval(timer);
 };
 
 
-    // function newYorkTimes(date) {
-    //     // Get a news article that happened today
-    // };
+// function newYorkTimes(date) {
+//     // Get a news article that happened today
+// };
 
 
-    // Gets new events for the inputted date
-    document.getElementById("datepicker").addEventListener("click", event => {
-        // prevents the submit action from refreshing the page
-        event.preventDefault();
+// Gets new events for the inputted date
+document.getElementById("datepicker").addEventListener("click", event => {
+    // prevents the submit action from refreshing the page
+    event.preventDefault();
 
-        // Empties the Wikipedia events display
-        let container = document.getElementById("eventdump");
-        while (container.lastChild) {
-            container.removeChild(container.lastChild);
-        };
-
-        // Gets the date from the input field
-        let input = document.getElementsByClassName("datepicker")[0].value.trim();
-        let month = moment(input).format("MMMM");
-        let day = moment(input).format("D");
-        Wikipedia(month + "_" + day);
-        // user validation: don't let them pick a date from the future, or give them 2017
-        // newYorkTimes(date)
-    });
-
-
-    // $(document).on("click", ".favorite", function() {
-    //     // push the wiki link to an array that goes to firebase
-    // });
-
-
-    // Wikipedia(); // Gets events for December 3rd
-    // Gets events for today
-    Wikipedia(moment().format("MMMM") + "_" + moment().format("D"));
-    // newYorkTimes(today);
-
-
-    //-----------------Firebase Auth----------------
-
-    // Initialize Firebase
-    var config = {
-        apiKey: "AIzaSyDOPGqntq8h2iNOJXEpfX1dhVn33fDVcHs",
-        authDomain: "project1-d2b28.firebaseapp.com",
-        databaseURL: "https://project1-d2b28.firebaseio.com",
-        projectId: "project1-d2b28",
-        storageBucket: "project1-d2b28.appspot.com",
-        messagingSenderId: "842500057449"
+    // Empties the Wikipedia events display
+    let container = document.getElementById("eventdump");
+    while (container.lastChild) {
+        container.removeChild(container.lastChild);
     };
-    firebase.initializeApp(config);
 
-    const txtEmail = document.getElementById('email');
-    const txtPassword = document.getElementById('password');
-    const btnLogin = document.getElementById('btnlogin');
-    const btnSignup = document.getElementById('btnsignup');
-    const btnLogout = document.getElementById('btnlogout');
-    const btnLogin1 = document.getElementById('login1');
-    const modal2 = document.getElementById('modal2');
+    // Gets the date from the input field
+    let input = document.getElementsByClassName("datepicker")[0].value.trim();
+    let month = moment(input).format("MMMM");
+    let day = moment(input).format("D");
+    Wikipedia(month + "_" + day);
+    // user validation: don't let them pick a date from the future, or give them 2017
+    // newYorkTimes(date)
+});
 
-    btnLogin.addEventListener('click', e => {
-        const email = txtEmail.value;
-        const password = txtPassword.value;
-        const auth = firebase.auth();
 
-        const promise = auth.signInWithEmailAndPassword(email, password);
-        promise.catch(e => console.log(e.message));
+$(document).on("click", ".favorite", function () {
+    // push the wiki link to an array that goes to firebase
+    let wikiText = this.parentElement.previousElementSibling.innerHTML;
+    console.log(wikiText);
+
+    let isItAlreadyAFavorite = favArray.filter(event => {
+        return wikiText === event;
     });
 
-    btnSignup.addEventListener('click', e => {
-        const email = txtEmail.value;
-        const password = txtPassword.value;
-        const auth = firebase.auth();
-        //TODO: (maybe) check for real email
-        const promise = auth.createUserWithEmailAndPassword(email, password);
-        promise.catch(e => console.log(e.message));
-    });
+    if (!isItAlreadyAFavorite.length) {
+        // Stores the gif in an array for favorited gifs
+        favArray.push(wikiText);
+    };
+    console.log(favArray);
+});
 
-    btnLogout.addEventListener('click', e => {
-        firebase.auth().signOut();
-    });
 
-    firebase.auth().onAuthStateChanged(firebaseUser => {
-        if (firebaseUser) {
-            console.log(firebaseUser);
-            btnLogout.classList.remove('hide');
-            btnLogin1.classList.add('hide');
-            modal2.classList.add('hide');
+// Wikipedia(); // Gets events for December 3rd
+// Gets events for today
+Wikipedia(moment().format("MMMM") + "_" + moment().format("D"));
+// newYorkTimes(today);
 
-        } else {
-            console.log('not logged in');
-            btnLogout.classList.add('hide');
-            btnLogin1.classList.remove('hide');
-            modal2.classList.remove('hide');
-        }
-    });
+
+//-----------------Firebase Auth----------------
+
+// Initialize Firebase
+var config = {
+    apiKey: "AIzaSyDOPGqntq8h2iNOJXEpfX1dhVn33fDVcHs",
+    authDomain: "project1-d2b28.firebaseapp.com",
+    databaseURL: "https://project1-d2b28.firebaseio.com",
+    projectId: "project1-d2b28",
+    storageBucket: "project1-d2b28.appspot.com",
+    messagingSenderId: "842500057449"
+};
+firebase.initializeApp(config);
+
+const txtEmail = document.getElementById('email');
+const txtPassword = document.getElementById('password');
+const btnLogin = document.getElementById('btnlogin');
+const btnSignup = document.getElementById('btnsignup');
+const btnLogout = document.getElementById('btnlogout');
+const btnLogin1 = document.getElementById('login1');
+const modal2 = document.getElementById('modal2');
+
+btnLogin.addEventListener('click', e => {
+    const email = txtEmail.value;
+    const password = txtPassword.value;
+    const auth = firebase.auth();
+
+    const promise = auth.signInWithEmailAndPassword(email, password);
+    promise.catch(e => console.log(e.message));
+});
+
+btnSignup.addEventListener('click', e => {
+    const email = txtEmail.value;
+    const password = txtPassword.value;
+    const auth = firebase.auth();
+    //TODO: (maybe) check for real email
+    const promise = auth.createUserWithEmailAndPassword(email, password);
+    promise.catch(e => console.log(e.message));
+});
+
+btnLogout.addEventListener('click', e => {
+    firebase.auth().signOut();
+});
+
+firebase.auth().onAuthStateChanged(firebaseUser => {
+    if (firebaseUser) {
+        console.log(firebaseUser);
+        btnLogout.classList.remove('hide');
+        btnLogin1.classList.add('hide');
+        modal2.classList.add('hide');
+
+    } else {
+        console.log('not logged in');
+        btnLogout.classList.add('hide');
+        btnLogin1.classList.remove('hide');
+        modal2.classList.remove('hide');
+    }
+});
