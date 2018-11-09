@@ -68,7 +68,6 @@ function wikiImage(wikipediaPage, event, array, index) {
         },
         method: "GET"
     }).then(response => {
-        console.log(response.parse);
         let wikipediaArticle = response.parse? response.parse.text["*"] : "";
         let infoIndex = wikipediaArticle.indexOf("class=\"infobox");
 
@@ -104,7 +103,6 @@ function getImagesForEachThing(array) {
         let pageIndexStart = eventText.indexOf("wiki/", dashIndex) + "wiki/".length;
         let pageIndexEnd = eventText.indexOf("\"", pageIndexStart);
         let page = eventText.substring(pageIndexStart, pageIndexEnd);
-        console.log(page);
         wikiImage(page, event, newArray, index);
     });
     let timer = setInterval(function () {
@@ -118,12 +116,14 @@ function displayOnPage(array, timer) {
     array.sort(function (a, b) {
         return a.index - b.index;
     });
-    array.forEach(event => {
+    array.forEach(event => {  
+        let container = document.createElement("div");
+        container.className = "col s12 m6";
         let card = document.createElement("div");
         card.className = "card";
 
         let cardImage = document.createElement("img");
-        cardImage.className = "card-image container";
+        cardImage.className = "card-image responsive-img";
         cardImage.src = event.image;
         cardImage.alt = "";
 
@@ -144,7 +144,8 @@ function displayOnPage(array, timer) {
         card.appendChild(cardContent);
         card.appendChild(cardFavorite);
 
-        document.getElementById("eventdump").appendChild(card);
+        container.appendChild(card);
+        document.getElementById("eventdump").appendChild(container);
     });
     clearInterval(timer);
 };
@@ -204,7 +205,6 @@ document.getElementById("datepicker").addEventListener("click", event => {
 $(document).on("click", ".favorite", function () {
     // push the wiki link to an array that goes to firebase
     let wikiText = this.parentElement.previousElementSibling.innerHTML;
-    console.log(wikiText);
 
     let isItAlreadyAFavorite = favArray.filter(event => {
         return wikiText === event;
@@ -214,7 +214,6 @@ $(document).on("click", ".favorite", function () {
         // Stores the gif in an array for favorited gifs
         favArray.push(wikiText);
     };
-    console.log(favArray);
     this.className = "btn disabled";
 });
 
