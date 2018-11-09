@@ -1,10 +1,16 @@
 let arrayOfEvents = [];
 
-$(document).ready(function () {
-    var timesURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
-    var timesParams = { "api-key": "d8a8f76b018a4c2ebe800ed7adaf2607" };
+function NYTimes(dateInput) {
+    let timesURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
+    let timesParams = { "api-key": "d8a8f76b018a4c2ebe800ed7adaf2607" };
 
-    timesParams.begin_date = moment().format("YYYYMMDD");
+    timesParams.begin_date = dateInput;
+
+    if (dateInput > moment().format("YYYYMMDD")) {
+        $("#articleHeader").text("Not a valid date!");
+        $("#paragraphSize").text("");
+        $("#readMore").attr("href", "");
+    };
 
     timesURL += '?' + $.param(timesParams);
 
@@ -12,11 +18,11 @@ $(document).ready(function () {
         url: timesURL,
         method: "GET"
     }).done(function (result) {
-        $("#articleHeader").append(result.response.docs[0].headline.main);
-        $("#paragraphSize").append(result.response.docs[0].snippet);
+        $("#articleHeader").text(result.response.docs[0].headline.main);
+        $("#paragraphSize").text(result.response.docs[0].snippet);
         $("#readMore").attr("href", result.response.docs[0].web_url)
     });
-});
+};
 
 $(document).ready(function () {
     $('.datepicker').datepicker();
@@ -150,6 +156,9 @@ $(document).on("click", "#datepicker", function (event) {
     let month = moment(input).format("MMMM");
     let day = moment(input).format("D");
     Wikipedia(month + "_" + day);
+
+    NYTimes(moment(input).format("YYYYMMDD"));
+
     // user validation: don't let them pick a date from the future, or give them 2017
     // newYorkTimes(date)
 });
@@ -159,11 +168,10 @@ $(document).on("click", "#datepicker", function (event) {
 //     // push the wiki link to an array that goes to firebase
 // });
 
-Wikipedia();
-
 // Wikipedia(); // Gets events for December 3rd
 // Gets events for today
 Wikipedia(moment().format("MMMM") + "_" + moment().format("D"));
+NYTimes(moment().format("YYYYMMDD"));
 // newYorkTimes(today);
 //-----------------Firebase Auth----------------
 
@@ -202,7 +210,7 @@ btnSignup.addEventListener('click', e => {
     //TODO: (maybe) check for real email
     const promise = auth.createUserWithEmailAndPassword(email, password);
     promise.catch(e => console.log(e.message));
-});  
+});
 
 btnLogout.addEventListener('click', e => {
     firebase.auth().signOut();
