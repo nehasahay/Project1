@@ -120,7 +120,7 @@ function displayOnPage(array, timer) {
         let container = document.createElement("div");
         container.className = "col s12 m6";
         let card = document.createElement("div");
-        card.className = "card";
+        card.className = "card large center-align";
 
         let cardImage = document.createElement("img");
         cardImage.className = "card-image responsive-img";
@@ -128,15 +128,14 @@ function displayOnPage(array, timer) {
         cardImage.alt = "";
 
         let cardContent = document.createElement("p");
-        cardContent.className = "card-content";
+        cardContent.className = "card-content left-align";
         cardContent.innerHTML = event.event;
 
         let cardFavorite = document.createElement("div");
         cardFavorite.className = "card-action";
 
-        let favoriteButton = document.createElement("button"); // <button>
+        let favoriteButton = document.createElement("button");
         favoriteButton.className = "favorite waves-effect waves-light btn";
-        // favoriteButton.href = "#";
         favoriteButton.textContent = "favorite";
         cardFavorite.appendChild(favoriteButton);
 

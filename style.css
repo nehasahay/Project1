@@ -1,5 +1,5 @@
 #modal2{
-    width: 40%;
+  width: 40%;
 }
 
 @import url(https://fonts.googleapis.com/css?family=Roboto);
@@ -125,9 +125,17 @@
 }
 
 h2 {
-  font-family: "Olde English Text, serif";
+  font-family: 'UnifrakturCook', cursive;
+  text-align: center;
 }
-  
+
+h3 {
+  color: #004a80
+}
+
+#eventdump {
+  margin-top: 2rem;
+}
 
 @media screen and (max-width: 768px) {
   .user_div {
