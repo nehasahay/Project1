@@ -1,33 +1,12 @@
-$(document).ready(function () {
-    var timesURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
-    var timesParams = {
-        "api-key": "d8a8f76b018a4c2ebe800ed7adaf2607"
-    };
-
-    timesParams.begin_date = moment().format("YYYYMMDD");
-
-    timesURL += '?' + $.param(timesParams);
-
-    $.ajax({
-        url: timesURL,
-        method: "GET"
-    }).done(function (result) {
-        $("#articleHeader").append(result.response.docs[0].headline.main);
-        $("#paragraphSize").append(result.response.docs[0].snippet);
-        $("#readMore").attr("href", result.response.docs[0].web_url)
-    });
-});
-
+let arrayOfEvents = [];
 
 $(document).ready(function () {
     $('.datepicker').datepicker();
 });
 
-
 $(document).ready(function () {
     $('.modal').modal();
 });
-
 
 // Gets the events that happened on the date from Wikipedia
 function Wikipedia(date = "December_3") {
@@ -74,7 +53,6 @@ function Wikipedia(date = "December_3") {
     });
 };
 
-
 // Gets the header image from a Wikipedia page
 function wikiImage(wikipediaPage, event, array, index) {
     $.ajax({
@@ -112,33 +90,31 @@ function wikiImage(wikipediaPage, event, array, index) {
     });
 };
 
-
 // Gets an image for each event
 function getImagesForEachThing(array) {
-        let newArray = [];
-        array.forEach((event, index) => {
-            let eventText = event.event;
+    let newArray = [];
+    array.forEach((event, index) => {
+        let eventText = event.event;
 
-            // Gets the second link in the event text (i.e. the first link after the year)
-            let dashIndex = eventText.indexOf(" – ");
-            let pageIndexStart = eventText.indexOf("wiki/", dashIndex) + "wiki/".length;
-            let pageIndexEnd = eventText.indexOf("\"", pageIndexStart);
-            let page = eventText.substring(pageIndexStart, pageIndexEnd);
-            wikiImage(page, event, newArray, index);
-        });
-        let timer = setInterval(function () {
-            if (newArray.length === array.length) displayOnPage(newArray, timer);
-        }, 500);
-        resolve(array);
-        // console.log(array);
+        // Gets the second link in the event text (i.e. the first link after the year)
+        let dashIndex = eventText.indexOf(" – ");
+        let pageIndexStart = eventText.indexOf("wiki/", dashIndex) + "wiki/".length;
+        let pageIndexEnd = eventText.indexOf("\"", pageIndexStart);
+        let page = eventText.substring(pageIndexStart, pageIndexEnd);
+        wikiImage(page, event, newArray, index);
+    });
+    let timer = setInterval(function () {
+        if (newArray.length === array.length) displayOnPage(newArray, timer);
+    }, 500);
+    resolve(array);
+    // console.log(array);
 };
-
 
 // Makes a card for each event
 function displayOnPage(array, timer) {
     array.sort(function (a, b) {
         return a.index - b.index;
-      });
+    });
     console.log(array);
     array.forEach(event => {
         console.log(JSON.stringify(event, null, 2));
@@ -173,98 +149,118 @@ function displayOnPage(array, timer) {
     clearInterval(timer);
 };
 
+// Grabs New York Times article
+function NYTimes(dateInput) {
+    let timesURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
+    let timesParams = { "api-key": "d8a8f76b018a4c2ebe800ed7adaf2607" };
 
-    // function newYorkTimes(date) {
-    //     // Get a news article that happened today
-    // };
+    timesParams.begin_date = dateInput;
 
-
-    // Gets new events for the inputted date
-    document.getElementById("datepicker").addEventListener("click", event => {
-        // prevents the submit action from refreshing the page
-        event.preventDefault();
-
-        // Empties the Wikipedia events display
-        let container = document.getElementById("eventdump");
-        while (container.lastChild) {
-            container.removeChild(container.lastChild);
-        };
-
-        // Gets the date from the input field
-        let input = document.getElementsByClassName("datepicker")[0].value.trim();
-        let month = moment(input).format("MMMM");
-        let day = moment(input).format("D");
-        Wikipedia(month + "_" + day);
-        // user validation: don't let them pick a date from the future, or give them 2017
-        // newYorkTimes(date)
-    });
-
-
-    // $(document).on("click", ".favorite", function() {
-    //     // push the wiki link to an array that goes to firebase
-    // });
-
-
-    // Wikipedia(); // Gets events for December 3rd
-    // Gets events for today
-    Wikipedia(moment().format("MMMM") + "_" + moment().format("D"));
-    // newYorkTimes(today);
-
-
-    //-----------------Firebase Auth----------------
-
-    // Initialize Firebase
-    var config = {
-        apiKey: "AIzaSyDOPGqntq8h2iNOJXEpfX1dhVn33fDVcHs",
-        authDomain: "project1-d2b28.firebaseapp.com",
-        databaseURL: "https://project1-d2b28.firebaseio.com",
-        projectId: "project1-d2b28",
-        storageBucket: "project1-d2b28.appspot.com",
-        messagingSenderId: "842500057449"
+    if (dateInput > moment().format("YYYYMMDD")) {
+        $("#articleHeader").text("Not a valid date!");
+        $("#paragraphSize").text("");
+        $("#readMore").attr("href", "");
     };
-    firebase.initializeApp(config);
 
-    const txtEmail = document.getElementById('email');
-    const txtPassword = document.getElementById('password');
-    const btnLogin = document.getElementById('btnlogin');
-    const btnSignup = document.getElementById('btnsignup');
-    const btnLogout = document.getElementById('btnlogout');
-    const btnLogin1 = document.getElementById('login1');
-    const modal2 = document.getElementById('modal2');
+    timesURL += '?' + $.param(timesParams);
 
-    btnLogin.addEventListener('click', e => {
-        const email = txtEmail.value;
-        const password = txtPassword.value;
-        const auth = firebase.auth();
-
-        const promise = auth.signInWithEmailAndPassword(email, password);
-        promise.catch(e => console.log(e.message));
+    $.ajax({
+        url: timesURL,
+        method: "GET"
+    }).done(function (result) {
+        $("#articleHeader").text(result.response.docs[0].headline.main);
+        $("#paragraphSize").text(result.response.docs[0].snippet);
+        $("#readMore").attr("href", result.response.docs[0].web_url)
     });
+};
 
-    btnSignup.addEventListener('click', e => {
-        const email = txtEmail.value;
-        const password = txtPassword.value;
-        const auth = firebase.auth();
-        //TODO: (maybe) check for real email
-        const promise = auth.createUserWithEmailAndPassword(email, password);
-        promise.catch(e => console.log(e.message));
-    });
+// Gets new events for the inputted date
+document.getElementById("datepicker").addEventListener("click", event => {
+    // prevents the submit action from refreshing the page
+    event.preventDefault();
 
-    btnLogout.addEventListener('click', e => {
-        firebase.auth().signOut();
-    });
+    // Empties the Wikipedia events display
+    let container = document.getElementById("eventdump");
+    while (container.lastChild) {
+        container.removeChild(container.lastChild);
+    };
 
-    firebase.auth().onAuthStateChanged(firebaseUser => {
-        if (firebaseUser) {
-            console.log(firebaseUser);
-            btnLogout.classList.remove('hide');
-            btnLogin1.classList.add('hide');
-            modal2.classList.add('hide');
+    // Gets the date from the input field
+    let input = document.getElementsByClassName("datepicker")[0].value.trim();
+    let month = moment(input).format("MMMM");
+    let day = moment(input).format("D");
+    Wikipedia(month + "_" + day);
+    // user validation: don't let them pick a date from the future, or give them 2017
+    
+    // Grabs New York Times article for the date the user input
+    NYTimes(moment(input).format("YYYYMMDD"));
+});
 
-        } else {
-            console.log('not logged in');
-            btnLogout.classList.add('hide');
-            btnLogin1.classList.remove('hide');
-            modal2.classList.remove('hide');
-        }
-    });
+// $(document).on("click", ".favorite", function() {
+//     // push the wiki link to an array that goes to firebase
+// });
+
+// Wikipedia(); // Gets events for December 3rd
+// Gets events for today
+Wikipedia(moment().format("MMMM") + "_" + moment().format("D"));
+
+// NYTimes(); Gets New York Times Article for today
+NYTimes(moment().format("YYYYMMDD"));
+
+//-----------------Firebase Auth----------------
+
+// Initialize Firebase
+var config = {
+    apiKey: "AIzaSyDOPGqntq8h2iNOJXEpfX1dhVn33fDVcHs",
+    authDomain: "project1-d2b28.firebaseapp.com",
+    databaseURL: "https://project1-d2b28.firebaseio.com",
+    projectId: "project1-d2b28",
+    storageBucket: "project1-d2b28.appspot.com",
+    messagingSenderId: "842500057449"
+};
+firebase.initializeApp(config);
+
+const txtEmail = document.getElementById('email');
+const txtPassword = document.getElementById('password');
+const btnLogin = document.getElementById('btnlogin');
+const btnSignup = document.getElementById('btnsignup');
+const btnLogout = document.getElementById('btnlogout');
+const btnLogin1 = document.getElementById('login1');
+const modal2 = document.getElementById('modal2');
+
+btnLogin.addEventListener('click', e => {
+    const email = txtEmail.value;
+    const password = txtPassword.value;
+    const auth = firebase.auth();
+
+    const promise = auth.signInWithEmailAndPassword(email, password);
+    promise.catch(e => console.log(e.message));
+});
+
+btnSignup.addEventListener('click', e => {
+    const email = txtEmail.value;
+    const password = txtPassword.value;
+    const auth = firebase.auth();
+    //TODO: (maybe) check for real email
+    const promise = auth.createUserWithEmailAndPassword(email, password);
+    promise.catch(e => console.log(e.message));
+});
+
+btnLogout.addEventListener('click', e => {
+    firebase.auth().signOut();
+});
+
+firebase.auth().onAuthStateChanged(firebaseUser => {
+    if (firebaseUser) {
+        console.log(firebaseUser);
+        btnLogout.classList.remove('hide');
+        btnLogin1.classList.add('hide');
+        modal2.classList.add('hide');
+
+    } else {
+        console.log('not logged in');
+        btnLogout.classList.add('hide');
+        btnLogin1.classList.remove('hide');
+        modal2.classList.remove('hide');
+    }
+});
