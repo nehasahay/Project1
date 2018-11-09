@@ -86,6 +86,8 @@ function wikiImage(wikipediaPage, event, array, index) {
             // placeholderImageURL goes here
             event["image"] = "iStock-487145924-1.jpg";
         };
+
+        // Stores the original position since this is an asynchronous function
         event["index"] = index;
         array.push(event);
     });
@@ -105,6 +107,8 @@ function getImagesForEachThing(array) {
         let page = eventText.substring(pageIndexStart, pageIndexEnd);
         wikiImage(page, event, newArray, index);
     });
+
+    // Only executes the display when every event has an image
     let timer = setInterval(function () {
         if (newArray.length === array.length) displayOnPage(newArray, timer);
     }, 500);
@@ -113,12 +117,15 @@ function getImagesForEachThing(array) {
 
 // Makes a card for each event
 function displayOnPage(array, timer) {
+    // Sorts the array based on the index
     array.sort(function (a, b) {
         return a.index - b.index;
     });
+
     array.forEach(event => {  
         let container = document.createElement("div");
         container.className = "col s12 m6";
+
         let card = document.createElement("div");
         card.className = "card large center-align";
 
@@ -180,7 +187,7 @@ function NYTimes(dateInput) {
 
 // Gets new events for the inputted date
 document.getElementById("datepicker").addEventListener("click", event => {
-    // prevents the submit action from refreshing the page
+    // Prevents the submit action from refreshing the page
     event.preventDefault();
 
     // Empties the Wikipedia events display
@@ -194,15 +201,14 @@ document.getElementById("datepicker").addEventListener("click", event => {
     let month = moment(input).format("MMMM");
     let day = moment(input).format("D");
     Wikipedia(month + "_" + day);
-    // user validation: don't let them pick a date from the future, or give them 2017
 
     // Grabs New York Times article for the date the user input
     NYTimes(moment(input).format("YYYYMMDD"));
 });
 
 
+// Stores an event in Firebase
 $(document).on("click", ".favorite", function () {
-    // push the wiki link to an array that goes to firebase
     let wikiText = this.parentElement.previousElementSibling.innerHTML;
 
     let isItAlreadyAFavorite = favArray.filter(event => {
@@ -210,9 +216,10 @@ $(document).on("click", ".favorite", function () {
     });
 
     if (!isItAlreadyAFavorite.length) {
-        // Stores the gif in an array for favorited gifs
+        // Stores the event in an array for favorites
         favArray.push(wikiText);
     };
+    
     this.className = "btn disabled";
 });
 
