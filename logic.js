@@ -1,25 +1,5 @@
 let favArray = [];
 
-$(document).ready(function () {
-    var timesURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
-    var timesParams = {
-        "api-key": "d8a8f76b018a4c2ebe800ed7adaf2607"
-    };
-
-    timesParams.begin_date = moment().format("YYYYMMDD");
-
-    timesURL += '?' + $.param(timesParams);
-
-    $.ajax({
-        url: timesURL,
-        method: "GET"
-    }).done(function (result) {
-        $("#articleHeader").append(result.response.docs[0].headline.main);
-        $("#paragraphSize").append(result.response.docs[0].snippet);
-        $("#readMore").attr("href", result.response.docs[0].web_url)
-    });
-});
-
 
 $(document).ready(function () {
     $('.datepicker').datepicker();
@@ -136,7 +116,6 @@ function displayOnPage(array, timer) {
     array.sort(function (a, b) {
         return a.index - b.index;
     });
-
     array.forEach(event => {
         let card = document.createElement("div");
         card.className = "card";
@@ -169,9 +148,32 @@ function displayOnPage(array, timer) {
 };
 
 
-// function newYorkTimes(date) {
-//     // Get a news article that happened today
-// };
+// Grabs New York Times article
+function NYTimes(dateInput) {
+    let timesURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
+    let timesParams = {
+        "api-key": "d8a8f76b018a4c2ebe800ed7adaf2607"
+    };
+
+    timesParams.begin_date = dateInput;
+
+    if (dateInput > moment().format("YYYYMMDD")) {
+        $("#articleHeader").text("Not a valid date!");
+        $("#paragraphSize").text("");
+        $("#readMore").attr("href", "");
+    };
+
+    timesURL += '?' + $.param(timesParams);
+
+    $.ajax({
+        url: timesURL,
+        method: "GET"
+    }).done(function (result) {
+        $("#articleHeader").text(result.response.docs[0].headline.main);
+        $("#paragraphSize").text(result.response.docs[0].snippet);
+        $("#readMore").attr("href", result.response.docs[0].web_url)
+    });
+};
 
 
 // Gets new events for the inputted date
@@ -191,7 +193,9 @@ document.getElementById("datepicker").addEventListener("click", event => {
     let day = moment(input).format("D");
     Wikipedia(month + "_" + day);
     // user validation: don't let them pick a date from the future, or give them 2017
-    // newYorkTimes(date)
+
+    // Grabs New York Times article for the date the user input
+    NYTimes(moment(input).format("YYYYMMDD"));
 });
 
 
@@ -211,12 +215,12 @@ $(document).on("click", ".favorite", function () {
     console.log(favArray);
 });
 
-
 // Wikipedia(); // Gets events for December 3rd
 // Gets events for today
 Wikipedia(moment().format("MMMM") + "_" + moment().format("D"));
-// newYorkTimes(today);
 
+// NYTimes(); Gets New York Times Article for today
+NYTimes(moment().format("YYYYMMDD"));
 
 //-----------------Firebase Auth----------------
 
