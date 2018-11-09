@@ -1,12 +1,15 @@
-let arrayOfEvents = [];
+let favArray = [];
+
 
 $(document).ready(function () {
     $('.datepicker').datepicker();
 });
 
+
 $(document).ready(function () {
     $('.modal').modal();
 });
+
 
 // Gets the events that happened on the date from Wikipedia
 function Wikipedia(date = "December_3") {
@@ -48,10 +51,10 @@ function Wikipedia(date = "December_3") {
         };
 
         // Gets the images for every item in the array
-        console.log(array);
         getImagesForEachThing(array);
     });
 };
+
 
 // Gets the header image from a Wikipedia page
 function wikiImage(wikipediaPage, event, array, index) {
@@ -79,16 +82,15 @@ function wikiImage(wikipediaPage, event, array, index) {
             let imgSrcThumbnail = imgSrc.lastIndexOf("/");
             imgSrc = "https://" + imgSrc.slice(0, imgSrcThumb) + imgSrc.slice(imgSrcThumb + "thumb/".length, imgSrcThumbnail);
             event["image"] = imgSrc;
-            // console.log(imgSrc);
         } else {
             // placeholderImageURL goes here
             event["image"] = "iStock-487145924-1.jpg";
         };
         event["index"] = index;
         array.push(event);
-        console.log(JSON.stringify(event, null, 2));
     });
 };
+
 
 // Gets an image for each event
 function getImagesForEachThing(array) {
@@ -106,18 +108,15 @@ function getImagesForEachThing(array) {
     let timer = setInterval(function () {
         if (newArray.length === array.length) displayOnPage(newArray, timer);
     }, 500);
-    resolve(array);
-    // console.log(array);
 };
+
 
 // Makes a card for each event
 function displayOnPage(array, timer) {
     array.sort(function (a, b) {
         return a.index - b.index;
     });
-    console.log(array);
     array.forEach(event => {
-        console.log(JSON.stringify(event, null, 2));
         let card = document.createElement("div");
         card.className = "card";
 
@@ -134,7 +133,7 @@ function displayOnPage(array, timer) {
         cardFavorite.className = "card-action";
 
         let favoriteButton = document.createElement("a"); // <button>
-        favoriteButton.className = "waves-effect waves-light btn";
+        favoriteButton.className = "favorite waves-effect waves-light btn";
         favoriteButton.href = "#";
         favoriteButton.text = "favorite";
         cardFavorite.appendChild(favoriteButton);
@@ -144,15 +143,17 @@ function displayOnPage(array, timer) {
         card.appendChild(cardFavorite);
 
         document.getElementById("eventdump").appendChild(card);
-        // console.log(card);
     });
     clearInterval(timer);
 };
 
+
 // Grabs New York Times article
 function NYTimes(dateInput) {
     let timesURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
-    let timesParams = { "api-key": "d8a8f76b018a4c2ebe800ed7adaf2607" };
+    let timesParams = {
+        "api-key": "d8a8f76b018a4c2ebe800ed7adaf2607"
+    };
 
     timesParams.begin_date = dateInput;
 
@@ -174,6 +175,7 @@ function NYTimes(dateInput) {
     });
 };
 
+
 // Gets new events for the inputted date
 document.getElementById("datepicker").addEventListener("click", event => {
     // prevents the submit action from refreshing the page
@@ -191,14 +193,27 @@ document.getElementById("datepicker").addEventListener("click", event => {
     let day = moment(input).format("D");
     Wikipedia(month + "_" + day);
     // user validation: don't let them pick a date from the future, or give them 2017
-    
+
     // Grabs New York Times article for the date the user input
     NYTimes(moment(input).format("YYYYMMDD"));
 });
 
-// $(document).on("click", ".favorite", function() {
-//     // push the wiki link to an array that goes to firebase
-// });
+
+$(document).on("click", ".favorite", function () {
+    // push the wiki link to an array that goes to firebase
+    let wikiText = this.parentElement.previousElementSibling.innerHTML;
+    console.log(wikiText);
+
+    let isItAlreadyAFavorite = favArray.filter(event => {
+        return wikiText === event;
+    });
+
+    if (!isItAlreadyAFavorite.length) {
+        // Stores the gif in an array for favorited gifs
+        favArray.push(wikiText);
+    };
+    console.log(favArray);
+});
 
 // Wikipedia(); // Gets events for December 3rd
 // Gets events for today
