@@ -164,6 +164,10 @@ Wikipedia();
 // Gets events for today
 Wikipedia(moment().format("MMMM") + "_" + moment().format("D"));
 // newYorkTimes(today);
+
+
+
+
 //-----------------Firebase Auth----------------
 
 // Initialize Firebase
@@ -177,6 +181,8 @@ var config = {
 };
 firebase.initializeApp(config);
 
+var database = firebase.database();
+
 const txtEmail = document.getElementById('email');
 const txtPassword = document.getElementById('password');
 const btnLogin = document.getElementById('btnlogin');
@@ -184,6 +190,7 @@ const btnSignup = document.getElementById('btnsignup');
 const btnLogout = document.getElementById('btnlogout');
 const btnLogin1 = document.getElementById('login1');
 const modal2 = document.getElementById('modal2');
+
 
 btnLogin.addEventListener('click', e => {
     const email = txtEmail.value;
@@ -201,23 +208,68 @@ btnSignup.addEventListener('click', e => {
     //TODO: (maybe) check for real email
     const promise = auth.createUserWithEmailAndPassword(email, password);
     promise.catch(e => console.log(e.message));
-});  
+});
 
 btnLogout.addEventListener('click', e => {
     firebase.auth().signOut();
 });
 
+
 firebase.auth().onAuthStateChanged(firebaseUser => {
     if (firebaseUser) {
+        // if logged in:
         console.log(firebaseUser);
         btnLogout.classList.remove('hide');
         btnLogin1.classList.add('hide');
-        modal2.classList.add('hide');
+        //modal2.classList.add('hide');
+        var user = firebase.auth().currentUser;
+        console.log("WORKING!" + user.email);
+        $("#welcome").text("welcome: " + user.email)
+        var userRef = user.email;
+        var userfavs = favArray;
+
 
     } else {
+        //if logged out:
         console.log('not logged in');
         btnLogout.classList.add('hide');
         btnLogin1.classList.remove('hide');
-        modal2.classList.remove('hide');
+        //modal2.classList.remove('hide');
+        //var user = "none";
+        //$("#welcome").text("");
+
     }
 });
+
+//-------------------firebase storage---------------
+
+//-----------------Getting favorites----------------
+favArray = [];
+$("#favorite").on("click", function() {
+    favArray.push($("#favorite").val());
+    database.ref().push({
+        email: userRef,
+        favorites: favArray,
+        dateAdded: firebase.database.ServerValue.TIMESTAMP
+    });
+});
+
+database.ref().on("child_added", function(snapshot) {
+    var sv = snapshot.val();
+    console.log("snapshot works: " + sv.email);
+});
+
+//var user = firebase.auth().currentUser;
+//var emailRef = user.email;
+//var ref = database.ref(emailRef);
+
+//var data = {
+   // wikiFavorites: "insert-wiki-array",
+   // timesFavorites: "insert-times-array"
+//};
+
+//ref.push(data);
+//const users = firebase.database().ref().child('users')
+//users.on('value', snap => {
+    //console.log(snap.val());
+//});
