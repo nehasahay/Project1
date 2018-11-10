@@ -1,5 +1,4 @@
 let favArray = [];
-let loggedIn = false;
 
 $(document).ready(function () {
     $('.datepicker').datepicker();
@@ -225,47 +224,45 @@ document.getElementById("datepicker").addEventListener("click", event => {
 
 // Stores an event in Firebase
 $(document).on("click", ".favorite", function () {
-    console.log(loggedIn);
-    if (loggedIn) {
-        let wikiText = this.parentElement.previousElementSibling.innerHTML;
+    let wikiText = this.parentElement.previousElementSibling.innerHTML;
 
-        let isItAlreadyAFavorite = favArray.filter(event => {
-            return wikiText === event;
-        });
+    let isItAlreadyAFavorite = favArray.filter(event => {
+        return wikiText === event;
+    });
 
-        if (!isItAlreadyAFavorite.length) {
-            // Stores the event in an array for favorites
-            favArray.push(wikiText);
-        };
-        console.log(favArray);
-
-        database.ref().child('users').child(uid).set({
-            email: user.email,
-            favorites: favArray,
-            dateAdded: firebase.database.ServerValue.TIMESTAMP
-        });
-
-        database.ref('users/' + uid).on("value", function (snapshot) {
-            var sv = snapshot.val();
-            //console.log("snapshot works: " + sv.email);
-            var title = sv.favorites;
-            console.log(title);
-            $("#fav-list").empty();
-            if (favArray.length === 0) {
-                favArray = title;
-                console.log(favArray);
-            };
-            for (var i = 0; i < title.length; i++) {
-                var newBullet = $("<li>");
-                newBullet.addClass("collection-item")
-                newBullet.html(title[i]);
-                $("#fav-list").append(newBullet)
-            };
-
-        });
-
-        this.className = "btn disabled";
+    if (!isItAlreadyAFavorite.length) {
+        // Stores the event in an array for favorites
+        favArray.push(wikiText);
     };
+    console.log(favArray);
+
+    database.ref().child('users').child(uid).set({
+        email: user.email,
+        favorites: favArray,
+        dateAdded: firebase.database.ServerValue.TIMESTAMP
+    });
+
+    database.ref('users/' + uid).on("value", function (snapshot) {
+        var sv = snapshot.val();
+        //console.log("snapshot works: " + sv.email);
+        var title = sv.favorites;
+        console.log(title);
+        $("#fav-list").empty();
+        if (favArray.length === 0) {
+            favArray = title;
+            console.log(favArray);
+        };
+        for (var i = 0; i < title.length; i++) {
+            var newBullet = $("<li>");
+            newBullet.addClass("collection-item")
+            newBullet.html(title[i]);
+            $("#fav-list").append(newBullet)
+        };
+
+    });
+
+    this.className = "btn disabled";
+
 });
 
 // Wikipedia(); // Gets events for December 3rd
@@ -309,7 +306,7 @@ btnSignup.addEventListener('click', e => {
 });
 
 btnLogout.addEventListener('click', e => {
-    console.log("working event listener");
+    console.log("working event listener")
     firebase.auth().signOut();
 });
 //------------------saving user data--------------
@@ -331,7 +328,6 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
     if (firebaseUser) {
         // if logged in:
         console.log(firebaseUser);
-        loggedIn = true;
         btnLogout.classList.remove('hide');
         btnLogin1.classList.add('hide');
         user = firebase.auth().currentUser;
@@ -354,14 +350,13 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
                 var newBullet = $("<li>");
                 newBullet.addClass("collection-item")
                 newBullet.html(title[i]);
-                $("#fav-list").append(newBullet);
+                $("#fav-list").append(newBullet)
             };
 
         });
     } else {
         //if logged out:
         console.log('not logged in');
-        loggedIn = false;
         btnLogout.classList.add('hide');
         btnLogin1.classList.remove('hide');
         //modal2.classList.remove('hide');
