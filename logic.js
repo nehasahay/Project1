@@ -306,6 +306,7 @@ btnSignup.addEventListener('click', e => {
     const promise = auth.createUserWithEmailAndPassword(email, password);
     console.log("user creation works");
     promise.catch(e => console.log(e.message));
+    favArray = [];
 });
 
 btnLogout.addEventListener('click', e => {
