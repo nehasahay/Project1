@@ -1,4 +1,5 @@
 let favArray = [];
+let loggedIn = false;
 
 $(document).ready(function () {
     $('.datepicker').datepicker();
@@ -10,6 +11,7 @@ $(document).ready(function () {
     $('.modal').modal();
 });
 
+// Initialize Firebase
 var config = {
     apiKey: "AIzaSyDOPGqntq8h2iNOJXEpfX1dhVn33fDVcHs",
     authDomain: "project1-d2b28.firebaseapp.com",
@@ -18,9 +20,11 @@ var config = {
     storageBucket: "project1-d2b28.appspot.com",
     messagingSenderId: "842500057449"
 };
+
 firebase.initializeApp(config);
 
 var database = firebase.database();
+
 
 // Gets the events that happened on the date from Wikipedia
 function Wikipedia(date = "December_3") {
@@ -164,6 +168,7 @@ function displayOnPage(array, timer) {
         container.appendChild(card);
         document.getElementById("eventdump").appendChild(container);
     });
+
     clearInterval(timer);
 };
 
@@ -175,6 +180,7 @@ function NYTimes(dateInput) {
         "api-key": "d8a8f76b018a4c2ebe800ed7adaf2607"
     };
 
+    // Gets the date for the day before, so the article is only for the single day
     let startDate = moment(dateInput);
     startDate.subtract(1, 'days');
 
@@ -194,7 +200,7 @@ function NYTimes(dateInput) {
         }).done(function (result) {
             $("#articleHeader").text(result.response.docs[0].headline.main);
             $("#paragraphSize").text(result.response.docs[0].snippet);
-            $("#readMore").attr("href", result.response.docs[0].web_url)
+            $("#readMore").attr("href", result.response.docs[0].web_url);
         });
     };
 };
@@ -224,58 +230,59 @@ document.getElementById("datepicker").addEventListener("click", event => {
 
 // Stores an event in Firebase
 $(document).on("click", ".favorite", function () {
-    let wikiText = this.parentElement.previousElementSibling.innerHTML;
+    if (loggedIn) {
+        let wikiText = this.parentElement.previousElementSibling.innerHTML;
 
-    let isItAlreadyAFavorite = favArray.filter(event => {
-        return wikiText === event;
-    });
+        let isItAlreadyAFavorite = favArray.filter(event => {
+            return wikiText === event;
+        });
 
-    if (!isItAlreadyAFavorite.length) {
-        // Stores the event in an array for favorites
-        favArray.push(wikiText);
+        if (!isItAlreadyAFavorite.length) {
+            // Stores the event in an array for favorites
+            favArray.push(wikiText);
+        };
+        console.log(favArray);
+
+        database.ref().child('users').child(uid).set({
+            email: user.email,
+            favorites: favArray,
+            dateAdded: firebase.database.ServerValue.TIMESTAMP
+        });
+
+        database.ref('users/' + uid).on("value", function (snapshot) {
+            var sv = snapshot.val();
+            //console.log("snapshot works: " + sv.email);
+            var title = sv.favorites;
+            console.log(title);
+            $("#fav-list").empty();
+            if (favArray.length === 0) {
+                favArray = title;
+                console.log(favArray);
+            };
+            for (var i = 0; i < title.length; i++) {
+                var newBullet = $("<li>");
+                newBullet.addClass("collection-item")
+                newBullet.html(title[i]);
+                $("#fav-list").append(newBullet)
+            };
+
+        });
+
+        this.className = "btn disabled";
     };
-    console.log(favArray);
-
-    database.ref().child('users').child(uid).set({
-        email: user.email,
-        favorites: favArray,
-        dateAdded: firebase.database.ServerValue.TIMESTAMP
-    });
-
-    database.ref('users/' + uid).on("value", function (snapshot) {
-        var sv = snapshot.val();
-        //console.log("snapshot works: " + sv.email);
-        var title = sv.favorites;
-        console.log(title);
-        $("#fav-list").empty();
-        if (favArray.length === 0) {
-            favArray = title;
-            console.log(favArray);
-        };
-        for (var i = 0; i < title.length; i++) {
-            var newBullet = $("<li>");
-            newBullet.addClass("collection-item")
-            newBullet.html(title[i]);
-            $("#fav-list").append(newBullet)
-        };
-
-    });
-
-    this.className = "btn disabled";
-
 });
+
 
 // Wikipedia(); // Gets events for December 3rd
 // Gets events for today
 Wikipedia(moment().format("MMMM") + "_" + moment().format("D"));
 
+
 // NYTimes(); Gets New York Times Article for today
 NYTimes(moment().format("YYYYMMDD"));
 
+
 //-----------------Firebase Auth----------------
-
-// Initialize Firebase
-
 
 const txtEmail = document.getElementById('email');
 const txtPassword = document.getElementById('password');
@@ -295,6 +302,7 @@ btnLogin.addEventListener('click', e => {
     promise.catch(e => console.log(e.message));
 });
 
+
 btnSignup.addEventListener('click', e => {
     const email = txtEmail.value;
     const password = txtPassword.value;
@@ -306,10 +314,13 @@ btnSignup.addEventListener('click', e => {
     favArray = [];
 });
 
+
 btnLogout.addEventListener('click', e => {
-    console.log("working event listener")
+    console.log("working event listener");
     firebase.auth().signOut();
 });
+
+
 //------------------saving user data--------------
 var user;
 var firebaseUser;
@@ -329,6 +340,7 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
     if (firebaseUser) {
         // if logged in:
         console.log(firebaseUser);
+        loggedIn = true;
         btnLogout.classList.remove('hide');
         btnLogin1.classList.add('hide');
         user = firebase.auth().currentUser;
@@ -351,13 +363,14 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
                 var newBullet = $("<li>");
                 newBullet.addClass("collection-item")
                 newBullet.html(title[i]);
-                $("#fav-list").append(newBullet)
+                $("#fav-list").append(newBullet);
             };
 
         });
     } else {
         //if logged out:
         console.log('not logged in');
+        loggedIn = false;
         btnLogout.classList.add('hide');
         btnLogin1.classList.remove('hide');
         //modal2.classList.remove('hide');
