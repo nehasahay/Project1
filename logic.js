@@ -11,6 +11,7 @@ $(document).ready(function () {
     $('.modal').modal();
 });
 
+// Initialize Firebase
 var config = {
     apiKey: "AIzaSyDOPGqntq8h2iNOJXEpfX1dhVn33fDVcHs",
     authDomain: "project1-d2b28.firebaseapp.com",
@@ -19,9 +20,11 @@ var config = {
     storageBucket: "project1-d2b28.appspot.com",
     messagingSenderId: "842500057449"
 };
+
 firebase.initializeApp(config);
 
 var database = firebase.database();
+
 
 // Gets the events that happened on the date from Wikipedia
 function Wikipedia(date = "December_3") {
@@ -165,6 +168,7 @@ function displayOnPage(array, timer) {
         container.appendChild(card);
         document.getElementById("eventdump").appendChild(container);
     });
+
     clearInterval(timer);
 };
 
@@ -176,6 +180,7 @@ function NYTimes(dateInput) {
         "api-key": "d8a8f76b018a4c2ebe800ed7adaf2607"
     };
 
+    // Gets the date for the day before, so the article is only for the single day
     let startDate = moment(dateInput);
     startDate.subtract(1, 'days');
 
@@ -195,7 +200,7 @@ function NYTimes(dateInput) {
         }).done(function (result) {
             $("#articleHeader").text(result.response.docs[0].headline.main);
             $("#paragraphSize").text(result.response.docs[0].snippet);
-            $("#readMore").attr("href", result.response.docs[0].web_url)
+            $("#readMore").attr("href", result.response.docs[0].web_url);
         });
     };
 };
@@ -267,17 +272,17 @@ $(document).on("click", ".favorite", function () {
     };
 });
 
+
 // Wikipedia(); // Gets events for December 3rd
 // Gets events for today
 Wikipedia(moment().format("MMMM") + "_" + moment().format("D"));
 
+
 // NYTimes(); Gets New York Times Article for today
 NYTimes(moment().format("YYYYMMDD"));
 
+
 //-----------------Firebase Auth----------------
-
-// Initialize Firebase
-
 
 const txtEmail = document.getElementById('email');
 const txtPassword = document.getElementById('password');
@@ -297,6 +302,7 @@ btnLogin.addEventListener('click', e => {
     promise.catch(e => console.log(e.message));
 });
 
+
 btnSignup.addEventListener('click', e => {
     const email = txtEmail.value;
     const password = txtPassword.value;
@@ -307,10 +313,13 @@ btnSignup.addEventListener('click', e => {
     promise.catch(e => console.log(e.message));
 });
 
+
 btnLogout.addEventListener('click', e => {
     console.log("working event listener");
     firebase.auth().signOut();
 });
+
+
 //------------------saving user data--------------
 var user;
 var firebaseUser;
