@@ -79,7 +79,7 @@ function wikiImage(wikipediaPage, event, array, index) {
         },
         method: "GET"
     }).then(response => {
-        let wikipediaArticle = response.parse? response.parse.text["*"] : "";
+        let wikipediaArticle = response.parse ? response.parse.text["*"] : "";
         let infoIndex = wikipediaArticle.indexOf("class=\"infobox");
 
         // Only grabs an image from the infobox section
@@ -133,7 +133,7 @@ function displayOnPage(array, timer) {
         return a.index - b.index;
     });
 
-    array.forEach(event => {  
+    array.forEach(event => {
         let container = document.createElement("div");
         container.className = "col s12 m6";
 
@@ -175,24 +175,28 @@ function NYTimes(dateInput) {
         "api-key": "d8a8f76b018a4c2ebe800ed7adaf2607"
     };
 
-    timesParams.begin_date = dateInput;
+    let startDate = moment(dateInput);
+    startDate.subtract(1, 'days');
+
+    timesParams.begin_date = startDate.format("YYYYMMDD");
+    timesParams.end_date = dateInput;
 
     if (dateInput > moment().format("YYYYMMDD")) {
         $("#articleHeader").text("Not a valid date!");
         $("#paragraphSize").text("");
         $("#readMore").attr("href", "");
+    } else {
+        timesURL += '?' + $.param(timesParams);
+
+        $.ajax({
+            url: timesURL,
+            method: "GET"
+        }).done(function (result) {
+            $("#articleHeader").text(result.response.docs[0].headline.main);
+            $("#paragraphSize").text(result.response.docs[0].snippet);
+            $("#readMore").attr("href", result.response.docs[0].web_url)
+        });
     };
-
-    timesURL += '?' + $.param(timesParams);
-
-    $.ajax({
-        url: timesURL,
-        method: "GET"
-    }).done(function (result) {
-        $("#articleHeader").text(result.response.docs[0].headline.main);
-        $("#paragraphSize").text(result.response.docs[0].snippet);
-        $("#readMore").attr("href", result.response.docs[0].web_url)
-    });
 };
 
 
@@ -254,11 +258,11 @@ $(document).on("click", ".favorite", function () {
             newBullet.html(title[i]);
             $("#fav-list").append(newBullet)
         };
-        
+
     });
 
     this.className = "btn disabled";
-    
+
 });
 
 // Wikipedia(); // Gets events for December 3rd
@@ -320,7 +324,7 @@ var email, uid;
 
 firebase.auth().onAuthStateChanged(firebaseUser => {
     firebaseUser = firebaseUser;
-    
+
     if (firebaseUser) {
         // if logged in:
         console.log(firebaseUser);
@@ -348,7 +352,7 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
                 newBullet.html(title[i]);
                 $("#fav-list").append(newBullet)
             };
-            
+
         });
     } else {
         //if logged out:
@@ -360,7 +364,7 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
         $("#welcome").text(" ");
         $("#fav-list").empty();
     };
-    
+
 });
 
 
@@ -376,12 +380,12 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
 //var ref = database.ref(emailRef);
 
 //var data = {
-   // wikiFavorites: "insert-wiki-array",
-   // timesFavorites: "insert-times-array"
+// wikiFavorites: "insert-wiki-array",
+// timesFavorites: "insert-times-array"
 //};
 
 //ref.push(data);
 //const users = firebase.database().ref().child('users')
 //users.on('value', snap => {
-    //console.log(snap.val());
+//console.log(snap.val());
 //});
