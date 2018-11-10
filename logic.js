@@ -1,8 +1,8 @@
 let favArray = [];
 
-
 $(document).ready(function () {
     $('.datepicker').datepicker();
+    firebase.auth().signOut();
 });
 
 
@@ -232,13 +232,31 @@ $(document).on("click", ".favorite", function () {
     };
     console.log(favArray);
 
-    database.ref().set({
+    database.ref().child('users').child(uid).set({
         email: user.email,
         favorites: favArray,
         dateAdded: firebase.database.ServerValue.TIMESTAMP
     });
 
-    
+    database.ref('users/' + uid).on("value", function (snapshot) {
+        var sv = snapshot.val();
+        //console.log("snapshot works: " + sv.email);
+        var title = sv.favorites;
+        console.log(title);
+        $("#fav-list").empty();
+        if (favArray.length === 0) {
+            favArray = title;
+            console.log(favArray);
+        };
+        for (var i = 0; i < title.length; i++) {
+            var newBullet = $("<li>");
+            newBullet.addClass("collection-item")
+            newBullet.html(title[i]);
+            $("#fav-list").append(newBullet)
+        };
+        
+    });
+
     this.className = "btn disabled";
     
 });
@@ -279,54 +297,59 @@ btnSignup.addEventListener('click', e => {
     const auth = firebase.auth();
     //TODO: (maybe) check for real email
     const promise = auth.createUserWithEmailAndPassword(email, password);
+    console.log("user creation works");
     promise.catch(e => console.log(e.message));
 });
 
 btnLogout.addEventListener('click', e => {
+    console.log("working event listener")
     firebase.auth().signOut();
 });
 //------------------saving user data--------------
 var user;
 var firebaseUser;
+var email, uid;
 
-database.ref().on("child_added", function (snapshot) {
-    var sv = snapshot.val();
-    console.log("snapshot works: " + sv.email);
-    var title = sv.favorites;
-    console.log(title);
-});
+// database.ref().child('users').child(uid).on("child_added", function (snapshot) {
+//     var sv = snapshot.val();
+//     console.log("snapshot works: " + sv.email);
+//     var title = sv.favorites;
+//     console.log(title);
+// });
 
-database.ref().on("value", function (snapshot) {
-    var sv = snapshot.val();
-    console.log("snapshot works: " + sv.email);
-    var title = sv.favorites;
-    console.log(title);
-    $("#fav-list").empty();
-    for (var i = 0; i < title.length; i++) {
-        var newBullet = $("<li>");
-        newBullet.html(title[i]);
-        
-        $("#fav-list").append(newBullet)
-    };
-    
-});
 
 firebase.auth().onAuthStateChanged(firebaseUser => {
     firebaseUser = firebaseUser;
-    console.log(firebaseUser.uid)
+    
     if (firebaseUser) {
         // if logged in:
         console.log(firebaseUser);
         btnLogout.classList.remove('hide');
         btnLogin1.classList.add('hide');
-        //modal2.classList.add('hide');
         user = firebase.auth().currentUser;
         console.log("WORKING!" + user.email);
-        $("#welcome").text("welcome: " + user.email)
+        $("#welcome").text("welcome: " + user.email);
+        uid = firebaseUser.uid;
+        console.log(uid);
 
-
-
-
+        database.ref('users/' + uid).on("value", function (snapshot) {
+            var sv = snapshot.val();
+            //console.log("snapshot works: " + sv.email);
+            var title = sv.favorites;
+            console.log(title);
+            $("#fav-list").empty();
+            if (favArray.length === 0) {
+                favArray = title;
+                console.log(favArray);
+            };
+            for (var i = 0; i < title.length; i++) {
+                var newBullet = $("<li>");
+                newBullet.addClass("collection-item")
+                newBullet.html(title[i]);
+                $("#fav-list").append(newBullet)
+            };
+            
+        });
     } else {
         //if logged out:
         console.log('not logged in');
@@ -334,9 +357,10 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
         btnLogin1.classList.remove('hide');
         //modal2.classList.remove('hide');
         //var user = "none";
-        //$("#welcome").text("");
-
-    }
+        $("#welcome").text(" ");
+        $("#fav-list").empty();
+    };
+    
 });
 
 
