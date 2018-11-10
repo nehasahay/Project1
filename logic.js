@@ -230,25 +230,17 @@ $(document).on("click", ".favorite", function () {
         // Stores the event in an array for favorites
         favArray.push(wikiText);
     };
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> master
     console.log(favArray);
 
-    database.ref().push({
+    database.ref().set({
         email: user.email,
         favorites: favArray,
         dateAdded: firebase.database.ServerValue.TIMESTAMP
     });
 
-<<<<<<< HEAD
-=======
-=======
->>>>>>> master
     
     this.className = "btn disabled";
->>>>>>> master
+    
 });
 
 // Wikipedia(); // Gets events for December 3rd
@@ -302,7 +294,21 @@ database.ref().on("child_added", function (snapshot) {
     console.log("snapshot works: " + sv.email);
     var title = sv.favorites;
     console.log(title);
-    $("#fav-list").text(title);
+});
+
+database.ref().on("value", function (snapshot) {
+    var sv = snapshot.val();
+    console.log("snapshot works: " + sv.email);
+    var title = sv.favorites;
+    console.log(title);
+    $("#fav-list").empty();
+    for (var i = 0; i < title.length; i++) {
+        var newBullet = $("<li>");
+        newBullet.html(title[i]);
+        
+        $("#fav-list").append(newBullet)
+    };
+    
 });
 
 firebase.auth().onAuthStateChanged(firebaseUser => {
