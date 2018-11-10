@@ -79,7 +79,7 @@ function wikiImage(wikipediaPage, event, array, index) {
         },
         method: "GET"
     }).then(response => {
-        let wikipediaArticle = response.parse.text["*"];
+        let wikipediaArticle = response.parse? response.parse.text["*"] : "";
         let infoIndex = wikipediaArticle.indexOf("class=\"infobox");
 
         // Only grabs an image from the infobox section
@@ -97,6 +97,8 @@ function wikiImage(wikipediaPage, event, array, index) {
             // placeholderImageURL goes here
             event["image"] = "iStock-487145924-1.jpg";
         };
+
+        // Stores the original position since this is an asynchronous function
         event["index"] = index;
         array.push(event);
     });
@@ -116,6 +118,8 @@ function getImagesForEachThing(array) {
         let page = eventText.substring(pageIndexStart, pageIndexEnd);
         wikiImage(page, event, newArray, index);
     });
+
+    // Only executes the display when every event has an image
     let timer = setInterval(function () {
         if (newArray.length === array.length) displayOnPage(newArray, timer);
     }, 500);
@@ -124,36 +128,41 @@ function getImagesForEachThing(array) {
 
 // Makes a card for each event
 function displayOnPage(array, timer) {
+    // Sorts the array based on the index
     array.sort(function (a, b) {
         return a.index - b.index;
     });
-    array.forEach(event => {
+
+    array.forEach(event => {  
+        let container = document.createElement("div");
+        container.className = "col s12 m6";
+
         let card = document.createElement("div");
-        card.className = "card";
+        card.className = "card large center-align";
 
         let cardImage = document.createElement("img");
-        cardImage.className = "card-image container";
+        cardImage.className = "card-image responsive-img";
         cardImage.src = event.image;
         cardImage.alt = "";
 
         let cardContent = document.createElement("p");
-        cardContent.className = "card-content";
+        cardContent.className = "card-content left-align";
         cardContent.innerHTML = event.event;
 
         let cardFavorite = document.createElement("div");
         cardFavorite.className = "card-action";
 
-        let favoriteButton = document.createElement("a"); // <button>
+        let favoriteButton = document.createElement("button");
         favoriteButton.className = "favorite waves-effect waves-light btn";
-        favoriteButton.href = "#";
-        favoriteButton.text = "favorite";
+        favoriteButton.textContent = "favorite";
         cardFavorite.appendChild(favoriteButton);
 
         card.appendChild(cardImage);
         card.appendChild(cardContent);
         card.appendChild(cardFavorite);
 
-        document.getElementById("eventdump").appendChild(card);
+        container.appendChild(card);
+        document.getElementById("eventdump").appendChild(container);
     });
     clearInterval(timer);
 };
@@ -189,7 +198,7 @@ function NYTimes(dateInput) {
 
 // Gets new events for the inputted date
 document.getElementById("datepicker").addEventListener("click", event => {
-    // prevents the submit action from refreshing the page
+    // Prevents the submit action from refreshing the page
     event.preventDefault();
 
     // Empties the Wikipedia events display
@@ -203,26 +212,25 @@ document.getElementById("datepicker").addEventListener("click", event => {
     let month = moment(input).format("MMMM");
     let day = moment(input).format("D");
     Wikipedia(month + "_" + day);
-    // user validation: don't let them pick a date from the future, or give them 2017
 
     // Grabs New York Times article for the date the user input
     NYTimes(moment(input).format("YYYYMMDD"));
 });
 
 
+// Stores an event in Firebase
 $(document).on("click", ".favorite", function () {
-    // push the wiki link to an array that goes to firebase
     let wikiText = this.parentElement.previousElementSibling.innerHTML;
-    console.log(wikiText);
 
     let isItAlreadyAFavorite = favArray.filter(event => {
         return wikiText === event;
     });
 
     if (!isItAlreadyAFavorite.length) {
-        // Stores the gif in an array for favorited gifs
+        // Stores the event in an array for favorites
         favArray.push(wikiText);
     };
+<<<<<<< HEAD
     console.log(favArray);
 
     database.ref().push({
@@ -231,6 +239,10 @@ $(document).on("click", ".favorite", function () {
         dateAdded: firebase.database.ServerValue.TIMESTAMP
     });
 
+=======
+    
+    this.className = "btn disabled";
+>>>>>>> master
 });
 
 // Wikipedia(); // Gets events for December 3rd
