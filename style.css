@@ -90,7 +90,7 @@
 
 .loginmodal-container a {
   text-decoration: none;
-  color: #666;
+  color: #667;
   font-weight: 400;
   text-align: center;
   display: inline-block;
@@ -169,5 +169,12 @@ h3 {
 
   #paragraphSize{
     font-size: 12px;
+  }
+  #modal2{
+    padding: 0px 5px 0px 5px;
+    line-height: 5px;
+    font-size: 10px;
+    width: 80%;
+    height: 80%;
   }
 }
