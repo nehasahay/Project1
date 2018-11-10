@@ -15,14 +15,14 @@
     <nav>
         <div class="nav-wrapper">
             <a class="brand-logo center">A Day in History</a>
-            <ul class="right hide-on-med-and-down">
+
+            <ul class="right hide-on-down">
+
                 <div class = "login_div">
                 <li id="welcome"></li>
                 <li><a class="waves-effect waves-light btn modal-trigger" id="login1" href="#modal2">Login</a></li>
                 <li><a class="waves-effect waves-light btn modal-trigger hide" id="btnlogout">Log out</a></li>
                 </div>
-
-                
             </ul>
         </div>
     </nav>
@@ -62,71 +62,27 @@
                     </div>
                 </div>
             </div>
-            <h4>Pick a date to venture into the past!</h4>
-            <input type="text" class="datepicker">
+            <h4 class="headerSize">Pick a date to venture into the past!</h4>
+            <input type="text" class="datepicker" placeholder="Click here to select a date!">
+
             <button class="btn waves-effect waves-light" type="submit" name="action" id="datepicker">Submit
                 <i class="material-icons right">send</i>
             </button>
         </div>
-
-        <br>
-
+        <div class="container" id="eventdump">
+        </div>
         <div class="container" id="recent-history">
-            <h2>New York Times</h2>
-            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Necessitatibus consectetur ducimus delectus
-                quae
-                expedita facilis fuga voluptatum labore, impedit dolorum placeat et dolore molestias consequuntur
-                accusamus
-                autem voluptatibus sunt esse.</p>
-            <a class="waves-effect waves-light btn">Read More</a>
+            <h2 class="headerSize">The New York Times</h2>
+            <h4 id="articleHeader" class="headerSize"></h4>
+            <p id="paragraphSize"></p>
+            <a id="readMore" class="waves-effect waves-light btn">Read More</a>
         </div>
-
-        <br>
-
-        <div class="container">
-            <div class="carousel carousel-slider center">
-                <div class="carousel-fixed-item center">
-                    <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Favorite</a>
-                </div>
-
-                <div class="carousel-item red black-text">
-                    <h2>First Panel</h2>
-                    <p class="black-text">This is your first panel</p>
-                </div>
-                <div class="carousel-item blue black-text">
-                    <h2>Second Panel</h2>
-                    <p class="black-text">This is your second panel</p>
-                </div>
-                <div class="carousel-item yellow black-text">
-                    <h2>Third Panel</h2>
-                    <p class="black-text">This is your third panel</p>
-                </div>
-                <div class="carousel-item green black-text">
-                    <h2>Fourth Panel</h2>
-                    <p class="black-text">This is your fourth panel</p>
-                </div>
-                <div class="carousel-item grey black-text">
-                    <h2>Fifth Panel</h2>
-                    <p class="black-text">This is your fifth panel</p>
-                </div>
-            </div>
-        </div>
-
-        <div id="modal1" class="modal bottom-sheet">
-            <div class="modal-content">
-                <h4>Modal Header</h4>
-                <p id="textdump">A bunch of text</p>
-            </div>
-        </div>
-
-        <br>
-
         <div class="container user_div">
             <div class="row">
                 <div class="col l6 s12">
                     <h5 class="black-text">Favorites</h5>
                     <ul>
-                        <li><a class="black-text text-lighten-3" href="#!">Link 1</a></li>
+                        <li><a id="fav-list" class="black-text text-lighten-3" href="#!">Link 1</a></li>
                         <li><a class="black-text text-lighten-3" href="#!">Link 2</a></li>
                         <li><a class="black-text text-lighten-3" href="#!">Link 3</a></li>
                         <li><a class="black-text text-lighten-3" href="#!">Link 4</a></li>
