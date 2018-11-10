@@ -10,6 +10,17 @@ $(document).ready(function () {
     $('.modal').modal();
 });
 
+var config = {
+    apiKey: "AIzaSyDOPGqntq8h2iNOJXEpfX1dhVn33fDVcHs",
+    authDomain: "project1-d2b28.firebaseapp.com",
+    databaseURL: "https://project1-d2b28.firebaseio.com",
+    projectId: "project1-d2b28",
+    storageBucket: "project1-d2b28.appspot.com",
+    messagingSenderId: "842500057449"
+};
+firebase.initializeApp(config);
+
+var database = firebase.database();
 
 // Gets the events that happened on the date from Wikipedia
 function Wikipedia(date = "December_3") {
@@ -219,6 +230,14 @@ $(document).on("click", ".favorite", function () {
         // Stores the event in an array for favorites
         favArray.push(wikiText);
     };
+    console.log(favArray);
+
+    database.ref().push({
+        email: user.email,
+        favorites: favArray,
+        dateAdded: firebase.database.ServerValue.TIMESTAMP
+    });
+
     
     this.className = "btn disabled";
 });
@@ -233,15 +252,7 @@ NYTimes(moment().format("YYYYMMDD"));
 //-----------------Firebase Auth----------------
 
 // Initialize Firebase
-var config = {
-    apiKey: "AIzaSyDOPGqntq8h2iNOJXEpfX1dhVn33fDVcHs",
-    authDomain: "project1-d2b28.firebaseapp.com",
-    databaseURL: "https://project1-d2b28.firebaseio.com",
-    projectId: "project1-d2b28",
-    storageBucket: "project1-d2b28.appspot.com",
-    messagingSenderId: "842500057449"
-};
-firebase.initializeApp(config);
+
 
 const txtEmail = document.getElementById('email');
 const txtPassword = document.getElementById('password');
@@ -250,6 +261,7 @@ const btnSignup = document.getElementById('btnsignup');
 const btnLogout = document.getElementById('btnlogout');
 const btnLogin1 = document.getElementById('login1');
 const modal2 = document.getElementById('modal2');
+
 
 btnLogin.addEventListener('click', e => {
     const email = txtEmail.value;
@@ -272,18 +284,65 @@ btnSignup.addEventListener('click', e => {
 btnLogout.addEventListener('click', e => {
     firebase.auth().signOut();
 });
+//------------------saving user data--------------
+var user;
+var firebaseUser;
+
+database.ref().on("child_added", function (snapshot) {
+    var sv = snapshot.val();
+    console.log("snapshot works: " + sv.email);
+    var title = sv.favorites;
+    console.log(title);
+    $("#fav-list").text(title);
+});
 
 firebase.auth().onAuthStateChanged(firebaseUser => {
+    firebaseUser = firebaseUser;
+    console.log(firebaseUser.uid)
     if (firebaseUser) {
+        // if logged in:
         console.log(firebaseUser);
         btnLogout.classList.remove('hide');
         btnLogin1.classList.add('hide');
-        modal2.classList.add('hide');
+        //modal2.classList.add('hide');
+        user = firebase.auth().currentUser;
+        console.log("WORKING!" + user.email);
+        $("#welcome").text("welcome: " + user.email)
+
+
+
 
     } else {
+        //if logged out:
         console.log('not logged in');
         btnLogout.classList.add('hide');
         btnLogin1.classList.remove('hide');
-        modal2.classList.remove('hide');
+        //modal2.classList.remove('hide');
+        //var user = "none";
+        //$("#welcome").text("");
+
     }
 });
+
+
+//-------------------firebase storage---------------
+
+//-----------------Getting favorites----------------
+
+
+
+
+//var user = firebase.auth().currentUser;
+//var emailRef = user.email;
+//var ref = database.ref(emailRef);
+
+//var data = {
+   // wikiFavorites: "insert-wiki-array",
+   // timesFavorites: "insert-times-array"
+//};
+
+//ref.push(data);
+//const users = firebase.database().ref().child('users')
+//users.on('value', snap => {
+    //console.log(snap.val());
+//});
