@@ -137,7 +137,7 @@ h3 {
   margin-top: 2rem;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 500px) {
   .user_div {
     width: 100%;
   } 
@@ -175,6 +175,6 @@ h3 {
     line-height: 5px;
     font-size: 10px;
     width: 80%;
-    height: 80%;
+    max-height: 100%
   }
 }
