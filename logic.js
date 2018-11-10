@@ -231,6 +231,9 @@ $(document).on("click", ".favorite", function () {
         favArray.push(wikiText);
     };
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> master
     console.log(favArray);
 
     database.ref().push({
@@ -239,7 +242,10 @@ $(document).on("click", ".favorite", function () {
         dateAdded: firebase.database.ServerValue.TIMESTAMP
     });
 
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> master
     
     this.className = "btn disabled";
 >>>>>>> master
