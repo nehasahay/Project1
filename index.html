@@ -8,6 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=UnifrakturCook:700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Alegreya+Sans+SC:500" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
@@ -15,12 +17,11 @@
     <nav>
         <div class="nav-wrapper">
             <a class="brand-logo center">A Day in History</a>
-
             <ul class="right hide-on-down">
-
-                <div class = "login_div">
-                <li><a class="waves-effect waves-light btn modal-trigger" id="login1" href="#modal2">Login</a></li>
-                <li><a class="waves-effect waves-light btn modal-trigger hide" id="btnlogout">Log out</a></li>
+                <div class="login_div">
+                    <li id="welcome"></li>
+                    <li><a class="waves-effect waves-light btn modal-trigger" id="login1" href="#modal2">Login</a></li>
+                    <li><a class="waves-effect waves-light btn hide" id="btnlogout">Log out</a></li>
                 </div>
             </ul>
         </div>
@@ -32,8 +33,7 @@
                     <div class="row">
                         <div class="row z-depth-6 card-panel">
                             <form class="login-form">
-                                <div class="row">
-                                </div>
+                                <h3>Account Login</h3>
                                 <div class="row">
                                     <div class="input-field col s12">
                                         <i class="material-icons prefix">mail_outline</i>
@@ -52,9 +52,14 @@
                         </div>
                         <div class="modal-footer">
                             <div class="row">
-                                <div class="input-field col s2">
-                                    <a href="#" class="btn waves-effect waves-light col s12" id="btnlogin">Login</a>
-                                    <a href="#" class="btn waves-effect waves-light col s12" id="btnsignup">Sign Up</a>
+                                <div class="center-align">
+                                    <a href="#" class="btn waves-effect waves-light modal-action modal-close" id="btnlogin">Login
+                                        <i class="material-icons right">vpn_key</i>
+                                    </a>
+                                    <a href="#" class="btn waves-effect waves-light modal-action modal-close" id="btnsignup">Sign
+                                        Up
+                                        <i class="material-icons right">account_circle</i>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -63,28 +68,30 @@
             </div>
             <h4 class="headerSize">Pick a date to venture into the past!</h4>
             <input type="text" class="datepicker" placeholder="Click here to select a date!">
-
             <button class="btn waves-effect waves-light" type="submit" name="action" id="datepicker">Submit
                 <i class="material-icons right">send</i>
             </button>
         </div>
-        <div class="container" id="eventdump">
-        </div>
-        <div class="container" id="recent-history">
-            <h2 class="headerSize">The New York Times</h2>
+        <div id="recent-history">
+            <h2 class="style1">The New YorK Times</h2>
             <h4 id="articleHeader" class="headerSize"></h4>
             <p id="paragraphSize"></p>
+<<<<<<< HEAD
             <a id="readMore" class="waves-effect waves-light btn" target=" ">Read More</a>
+=======
+            <a id="readMore" target="_blank" class="waves-effect waves-light btn">Read More</a>
         </div>
-        <div class="container user_div">
+        <div>
+            <h2 class="style2">WikipediA</h2>
+        </div>
+        <div class="row" id="eventdump">
+>>>>>>> master
+        </div>
+        <div class="user_div">
             <div class="row">
-                <div class="col l6 s12">
+                <div class="col s12">
                     <h5 class="black-text">Favorites</h5>
-                    <ul>
-                        <li><a class="black-text text-lighten-3" href="#!">Link 1</a></li>
-                        <li><a class="black-text text-lighten-3" href="#!">Link 2</a></li>
-                        <li><a class="black-text text-lighten-3" href="#!">Link 3</a></li>
-                        <li><a class="black-text text-lighten-3" href="#!">Link 4</a></li>
+                    <ul id="fav-list" class="collection">
                     </ul>
                 </div>
             </div>
